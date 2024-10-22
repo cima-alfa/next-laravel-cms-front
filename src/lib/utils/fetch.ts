@@ -1,16 +1,7 @@
-import { route, routeApi } from "@/lib/router/router";
+"use server";
+
+import { routeApi } from "@/lib/router/router";
 import { getCookie, getCookieString } from "@/lib/utils/cookies";
-
-export const setCookies = (setCookie: string[]) => {
-    const headers = new Headers({
-        "X-Set-Cookie": setCookie.join(","),
-    });
-
-    return fetch(route("front.set.cookies"), {
-        method: "POST",
-        headers: headers,
-    });
-};
 
 export const getCookies = async (renewCookies: boolean) => {
     if (!renewCookies) {
