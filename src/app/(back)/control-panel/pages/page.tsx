@@ -1,7 +1,7 @@
 export default async function Page() {
-    const test = await fetch("http://127.0.0.1:8000/api/test");
+    // const test = await fetch("http://localhost:8000/reset-password");
 
-    console.log(await test.json());
+    // console.log(test.status);
 
     return <div>Page Listing</div>;
 }
