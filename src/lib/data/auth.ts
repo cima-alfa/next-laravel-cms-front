@@ -1,3 +1,5 @@
+"use server";
+
 import { routeApi } from "@/lib/router/router";
 import { fetchApi } from "@/lib/utils/fetch";
 
