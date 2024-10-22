@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import Form from "next/form";
 import { login } from "@/lib/actions/auth";
-import { setCookies } from "@/lib/utils/fetch";
+import { setCookies } from "@/lib/utils/setCookies";
 
 export default function Page() {
     const loginWrapper = async (
