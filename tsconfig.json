@@ -18,11 +18,19 @@
             }
         ],
         "paths": {
-            "@/back-ui/*": ["./src/ui/back/*"],
-            "@/front-ui/*": ["./src/ui/front/*"],
-            "@/*": ["./src/*"]
-        }
+            "@/back-ui/*": ["./src/ui/_back/*"],
+            "@/front-ui/*": ["./src/ui/_front/*"],
+            "@/*": ["./src/*"],
+            "@/root/*": ["./*"]
+        },
+        "target": "ES2017"
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "src/lib/ziggy.js"
+    ],
     "exclude": ["node_modules"]
 }
