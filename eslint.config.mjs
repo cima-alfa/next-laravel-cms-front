@@ -13,7 +13,7 @@ const compat = new FlatCompat({
 });
 
 const patchedConfig = fixupConfigRules([
-    ...compat.extends("next/core-web-vitals", "next/typescript"),
+    ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
 ]);
 
 const config = [...patchedConfig, { ignores: [".next/*"] }];
