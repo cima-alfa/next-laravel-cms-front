@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# router
+src/lib/router/*
+!src/lib/router/router.ts
