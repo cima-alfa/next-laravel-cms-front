@@ -1,9 +1,11 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { fetchUser } from "@/lib/data/auth";
-import { route } from "@/lib/router/router";
+import { Route, route } from "@/lib/router/router";
 import { CustomMiddleware } from "@/lib/middleware/_chain";
+import { hasMiddleware } from "@/middleware";
 
-export const isAuthenticated = (
+export const guestMiddleware = (
+    currentRoute: Route | null,
     middleware: CustomMiddleware
 ): CustomMiddleware => {
     return async (
@@ -11,16 +13,11 @@ export const isAuthenticated = (
         event: NextFetchEvent,
         response: NextResponse
     ) => {
-        if (
-            request.nextUrl.pathname === "/login" ||
-            request.nextUrl.pathname === "/register"
-        ) {
+        if (hasMiddleware(currentRoute, "front:auth")) {
             const user = await fetchUser();
 
-            if (user) {
-                return NextResponse.redirect(
-                    route("front.cp.dashboard.index", {}, true)
-                );
+            if (!user) {
+                return NextResponse.redirect(route("front.login", {}, true));
             }
         }
 
