@@ -13,13 +13,11 @@ export const authMiddleware = (
         event: NextFetchEvent,
         response: NextResponse
     ) => {
-        if (hasMiddleware(currentRoute, "front:guest")) {
+        if (hasMiddleware(currentRoute, "front:auth")) {
             const user = await fetchUser();
 
-            if (user) {
-                return NextResponse.redirect(
-                    route("front.cp.dashboard.index", {}, true)
-                );
+            if (!user) {
+                return NextResponse.redirect(route("front.login", {}, true));
             }
         }
 
