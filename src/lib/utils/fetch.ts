@@ -1,29 +1,37 @@
 "use server";
 
-import { routeApi } from "@/lib/router/router";
-import { getCookie, getCookieString } from "@/lib/utils/cookies";
+import { linkApi } from "@/lib/router/router";
+import {
+    getCookie,
+    getCookieStore,
+    getCookieString,
+} from "@/lib/utils/cookies";
+import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
-export const getCookies = async (renewCookies: boolean) => {
-    if (!renewCookies) {
+export const getCookies = async (freshCookies: boolean) => {
+    if (!freshCookies) {
         const cookies = await getCookieString();
 
         return {
-            cookies: cookies,
+            cookies,
             csrfToken: (await getCookie("XSRF-TOKEN"))?.value ?? "",
         };
     }
 
     try {
-        const setCookie = (await fetchCsrf()).headers.getSetCookie();
+        const _setCookie = (await fetchCsrf()).headers.getSetCookie();
 
-        const csrfTokenCookie = setCookie.find((cookie: string) =>
+        const cookies = _setCookie.join(";");
+
+        const csrfTokenCookie = _setCookie.find((cookie: string) =>
             cookie.startsWith("XSRF-TOKEN")
         ) as string;
 
-        const cookies = setCookie.join(";");
         const csrfToken = decodeURIComponent(
             csrfTokenCookie?.match(/^XSRF-TOKEN=(.+?);/)?.[1] ?? ""
         );
+
+        await setCookie(csrfTokenCookie);
 
         return {
             cookies,
@@ -39,8 +47,52 @@ export const getCookies = async (renewCookies: boolean) => {
     }
 };
 
-export const defaultHeaders = async (renewCookies: boolean) => {
-    const { cookies, csrfToken } = await getCookies(renewCookies);
+export const setCookie = async (cookie: string) => {
+    const cookieStore = await getCookieStore();
+
+    const cookieData = `${cookie};`.matchAll(/\s*(.+?)\s*(?:=\s*(.+?))?\s*;/g);
+
+    const cookieNameValue = cookieData.next();
+
+    const setCookie: { [key: string]: string } = {
+        name: cookieNameValue.value?.at(1) as string,
+        value: cookieNameValue.value?.at(2) as string,
+    };
+
+    cookieData.forEach((data) => {
+        // eslint-disable-next-line prefer-const
+        let [, key, value] = data;
+
+        switch (key.toLowerCase()) {
+            case "httponly":
+                key = "httpOnly";
+                break;
+
+            case "samesite":
+                key = "sameSite";
+                break;
+
+            case "max-age":
+                key = "maxAge";
+                break;
+        }
+
+        setCookie[key] = value ?? true;
+    });
+
+    cookieStore.set(setCookie as unknown as ResponseCookie);
+};
+
+export const setCookies = async (response: Response) => {
+    response.headers.getSetCookie().forEach((cookie) => {
+        setCookie(cookie);
+    });
+};
+
+export const defaultHeaders = async (
+    freshCookies: boolean
+): Promise<HeadersInit> => {
+    const { cookies, csrfToken } = await getCookies(freshCookies);
 
     return {
         Accept: "application/json",
@@ -54,16 +106,16 @@ export const defaultHeaders = async (renewCookies: boolean) => {
 export const fetchApi = async (
     url: string,
     init?: RequestInit,
-    renewCookies = false
+    freshCookies = false
 ) => {
     if (init === undefined) {
         init = { headers: {} };
     }
 
     init.credentials = "include";
-    init.referrer = process.env.FRONT_URL as string;
+    init.referrer = process.env.NEXT_PUBLIC_FRONT_URL as string;
 
-    const _defaultHeaders = await defaultHeaders(renewCookies);
+    const _defaultHeaders = await defaultHeaders(freshCookies);
 
     init.headers = {
         ..._defaultHeaders,
@@ -73,13 +125,12 @@ export const fetchApi = async (
     return fetch(url, init);
 };
 
-export const fetchCsrf = async () =>
-    fetch(routeApi("sanctum.csrf-cookie"), {
+export const fetchCsrf = async () => {
+    const headers = await defaultHeaders(false);
+
+    return fetch(linkApi("sanctum.csrf-cookie"), {
         credentials: "include",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-        },
-        referrer: process.env.FRONT_URL as string,
+        headers: headers,
+        referrer: process.env.NEXT_PUBLIC_FRONT_URL as string,
     });
+};
