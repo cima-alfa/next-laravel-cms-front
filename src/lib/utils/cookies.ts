@@ -3,13 +3,13 @@
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 
-export async function getCookieStore(): Promise<RequestCookie[]>;
+export async function getCookies(): Promise<RequestCookie[]>;
 
-export async function getCookieStore(
+export async function getCookies(
     ...names: string[]
 ): Promise<{ [key: string]: RequestCookie | undefined }>;
 
-export async function getCookieStore(...names: string[]) {
+export async function getCookies(...names: string[]) {
     const cookieStore = await cookies();
 
     if (!names.length) {
@@ -28,7 +28,15 @@ export async function getCookieStore(...names: string[]) {
 }
 
 export const getCookieString = async () => {
-    return (await cookies()).toString();
+    const cookies = await getCookies();
+
+    const cookieStrings: string[] = [];
+
+    cookies.map((cookie) => {
+        cookieStrings.push(`${cookie.name}=${cookie.value}`);
+    });
+
+    return cookieStrings.join(";");
 };
 
 export const getCookie = async (name: string) => {
@@ -36,3 +44,5 @@ export const getCookie = async (name: string) => {
 
     return cookieStore.get(name);
 };
+
+export const getCookieStore = async () => await cookies();
