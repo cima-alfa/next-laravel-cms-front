@@ -33,22 +33,24 @@ export const updateSourceMedia = (
     });
 };
 
-export const useSetSourceMedia = () => {
+export const useSetSourceMedia = (
+    ...pictures: React.RefObject<HTMLPictureElement | null>[]
+) => {
     useEffect(() => {
-        const pictures = document.querySelectorAll("picture");
+        pictures.forEach((_picture) => {
+            const picture = _picture.current;
 
-        pictures.forEach((picture) => {
-            const sources: NodeListOf<HTMLSourceElement> =
-                picture.querySelectorAll(`
+            const sources: NodeListOf<HTMLSourceElement> | undefined =
+                picture?.querySelectorAll(`
                     source[media*="prefers-color-scheme"], 
                     source[data-media*="prefers-color-scheme"]
                 `);
 
-            sources.forEach((source) => {
+            sources?.forEach((source) => {
                 if (source?.media.includes("prefers-color-scheme")) {
                     source.dataset.media = source.media;
                 }
             });
         });
-    }, []);
+    }, [pictures]);
 };
