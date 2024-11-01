@@ -1,8 +1,8 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { fetchUser } from "@/lib/data/auth";
-import { Route, route } from "@/lib/router/router";
-import { CustomMiddleware } from "@/lib/middleware/_chain";
-import { hasMiddleware } from "@/middleware";
+import { fetchAuthenticated } from "@/lib/data/auth";
+import { Route, link } from "@/lib/router/router";
+import { CustomMiddleware } from "@/lib/middleware";
+import { hasMiddleware } from "@/lib/middleware";
 
 export const guestMiddleware = (
     currentRoute: Route | null,
@@ -14,11 +14,11 @@ export const guestMiddleware = (
         response: NextResponse
     ) => {
         if (hasMiddleware(currentRoute, "front:guest")) {
-            const user = await fetchUser();
+            const authenticated = await fetchAuthenticated();
 
-            if (user) {
+            if (authenticated) {
                 return NextResponse.redirect(
-                    route("front.cp.dashboard.index", {}, true)
+                    link("front.cp.dashboard.index", {}, true)
                 );
             }
         }
