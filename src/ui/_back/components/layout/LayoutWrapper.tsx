@@ -1,4 +1,4 @@
-import ControlPanelBarWrapper from "@/ui/components/ControlPanelBar/ControlPanelBarWrapper";
+import ControlPanelBar from "@/ui/components/ControlPanelBar";
 import { twMerge } from "tailwind-merge";
 import { Inter } from "next/font/google";
 
@@ -25,7 +25,7 @@ export default function LayoutWrapper({
             )}
             {...rest}
         >
-            <ControlPanelBarWrapper className="[grid-area:cp-bar] sticky top-0" />
+            <ControlPanelBar className="[grid-area:cp-bar] sticky top-0" />
 
             {children}
         </div>

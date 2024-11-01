@@ -108,15 +108,6 @@ export default function ControlPanelBar({
                                 hover:bg-cp-neutral-800
                                 transition-colors
                                 "
-                            >
-                                Test
-                            </button>
-                            <button
-                                className="
-                                block w-full min-w-28 py-2 px-3
-                                hover:bg-cp-neutral-800
-                                transition-colors
-                                "
                                 onClick={logoutWithRedirect}
                             >
                                 Logout
