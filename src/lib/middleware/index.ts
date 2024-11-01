@@ -34,3 +34,12 @@ export function chain(
         return response;
     };
 }
+
+export const hasMiddleware = (
+    route: Route | null,
+    searchMiddleware: string
+) => {
+    return !!route?.data.middleware?.find(
+        (routeMiddleware) => routeMiddleware === searchMiddleware
+    );
+};
