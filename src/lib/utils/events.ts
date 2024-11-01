@@ -1,3 +1,5 @@
+import "client-only";
+
 const targetMap = new Map();
 
 const eventListener = {
