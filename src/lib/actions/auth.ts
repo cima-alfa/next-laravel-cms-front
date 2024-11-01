@@ -2,7 +2,8 @@
 
 import { hasMiddleware } from "@/lib/middleware";
 import { getCurrentRoute, link, linkApi } from "@/lib/router/router";
-import { fetchApi, setCookies } from "@/lib/utils/fetch";
+import { setCookies } from "@/lib/utils/cookies";
+import { fetchApi } from "@/lib/utils/fetch";
 import { redirect, RedirectType } from "next/navigation";
 
 export type AuthState = {
@@ -17,7 +18,7 @@ export const logout = async (pathname?: string) => {
                 return;
             }
 
-            await setCookies(response);
+            await setCookies(response.headers.getSetCookie());
 
             if (pathname !== undefined) {
                 const currentRoute = getCurrentRoute(pathname);
@@ -31,8 +32,6 @@ export const logout = async (pathname?: string) => {
 };
 
 export const login = async (prevState: AuthState, formData: FormData) => {
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const data = {
         login: formData?.get("login"),
         password: formData?.get("password"),
@@ -54,7 +53,7 @@ export const login = async (prevState: AuthState, formData: FormData) => {
                 };
             }
 
-            await setCookies(response);
+            await setCookies(response.headers.getSetCookie());
 
             redirect(link("front.cp.dashboard.index"), RedirectType.replace);
         }
@@ -85,7 +84,7 @@ export const register = async (prevState: AuthState, formData: FormData) => {
                 };
             }
 
-            await setCookies(response);
+            await setCookies(response.headers.getSetCookie());
 
             redirect(link("front.verification.notice"));
         }
