@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
-export default function Header({
+export default function LayoutHeader({
     children,
     className,
     ...rest

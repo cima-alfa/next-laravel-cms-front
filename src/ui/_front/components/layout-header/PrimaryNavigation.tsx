@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
-import { route } from "@/lib/router/router";
+import { link } from "@/lib/router/router";
 
 export default function PrimaryNavigation({
     className,
@@ -43,7 +43,7 @@ export default function PrimaryNavigation({
                     </li>
                     <li>
                         <PrimaryNavigationLink
-                            href={route("front.login")}
+                            href={link("front.login")}
                             title=""
                         >
                             Login
@@ -51,7 +51,7 @@ export default function PrimaryNavigation({
                     </li>
                     <li>
                         <PrimaryNavigationLink
-                            href={route("front.register")}
+                            href={link("front.register")}
                             title=""
                         >
                             Register

@@ -1,19 +1,20 @@
-"use client";
-
-import { useState } from "react";
+import ExpandButton from "@/ui/components/ExpandButton";
 import { twMerge } from "tailwind-merge";
+
+interface Props extends React.HtmlHTMLAttributes<HTMLButtonElement> {
+    controls: string;
+}
 
 export default function PrimaryNavigationButton({
     className,
+    controls,
     ...rest
-}: Readonly<React.HtmlHTMLAttributes<HTMLButtonElement>>) {
-    const [primaryNavExpanded, setPrimaryNavExpanded] = useState(false);
-
+}: Readonly<Props>) {
     return (
-        <button
+        <ExpandButton
             className={twMerge(
                 `
-                [grid-area:primaryNavButton] relative peer w-5 h-5
+                relative size-5
                 before:absolute before:top-1/2 before:left-1/2 before:-translate-y-1.5 before:-translate-x-1/2 before:w-full before:h-0.5 before:transition-transform
                 after:absolute after:top-1/2 after:left-1/2 after:translate-y-1.5 after:-translate-x-1/2 after:w-full after:h-0.5 after:transition-transform
                 [&[aria-expanded=true]]:before:-translate-y-1/2 [&[aria-expanded=true]]:after:-translate-y-1/2 [&[aria-expanded=true]]:before:-rotate-45 [&[aria-expanded=true]]:after:rotate-45
@@ -22,13 +23,10 @@ export default function PrimaryNavigationButton({
                 `,
                 className
             )}
-            aria-controls="primaryNav"
-            aria-expanded={primaryNavExpanded}
-            type="button"
-            onClick={() => setPrimaryNavExpanded(!primaryNavExpanded)}
+            controls={controls}
             {...rest}
         >
             <span className="sr-only">Primary Navigation</span>
-        </button>
+        </ExpandButton>
     );
 }

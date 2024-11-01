@@ -1,9 +1,5 @@
-"use client";
-
 import "@/front-ui/assets/globals.css";
-import { useState } from "react";
-import { route } from "@/lib/router/router";
-import { useSetSourceMedia } from "@/lib/utils/theme";
+import { link } from "@/lib/router/router";
 
 import LayoutWrapper from "@/ui/_front/components/LayoutWrapper";
 import LayoutHeader from "@/ui/_front/components/layout-header/LayoutHeader";
@@ -18,23 +14,16 @@ export default function Layout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    useSetSourceMedia();
-
-    const [primaryNavExpanded, setPrimaryNavExpanded] = useState(false);
-
     return (
         <LayoutWrapper>
             <LayoutHeader>
                 <HeaderLogo
-                    href={route("front.page.permalink")}
+                    href={link("front.page.permalink")}
                     title="Jeremy's Portfolio"
                     alt="Cima Alfa: Jeremy's Portfolio"
                 />
 
-                <PrimaryNavigationButton
-                    primaryNavExpanded={primaryNavExpanded}
-                    setPrimaryNavExpanded={setPrimaryNavExpanded}
-                />
+                <PrimaryNavigationButton />
 
                 <PrimaryNavigation />
             </LayoutHeader>

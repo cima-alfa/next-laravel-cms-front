@@ -7,13 +7,15 @@ export default function LayoutFooter({
 }: Readonly<React.HtmlHTMLAttributes<HTMLDivElement>>) {
     return (
         <footer
-            className={twMerge(
-                "[grid-area:footer] p-2 pb-12 z-0 md:pb-2",
-                className
-            )}
+            className={twMerge("[grid-area:footer] p-4 z-0", className)}
             {...rest}
         >
-            <div className="grid place-content-center max-w-screen-xl mx-auto text-sm font-semibold">
+            <div
+                className="
+                grid content-center
+                text-xs font-semibold text-cp-neutral-700 dark:text-cp-neutral-300
+                "
+            >
                 {children}
             </div>
         </footer>
