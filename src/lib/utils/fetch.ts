@@ -1,14 +1,10 @@
 "use server";
 
+import "server-only";
 import { linkApi } from "@/lib/router/router";
-import {
-    getCookie,
-    getCookieStore,
-    getCookieString,
-} from "@/lib/utils/cookies";
-import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { getCookie, getCookieString, setCookie } from "@/lib/utils/cookies";
 
-export const getCookies = async (freshCookies: boolean) => {
+const getCookies = async (freshCookies: boolean) => {
     if (!freshCookies) {
         const cookies = await getCookieString();
 
@@ -45,48 +41,6 @@ export const getCookies = async (freshCookies: boolean) => {
             csrfToken: "",
         };
     }
-};
-
-export const setCookie = async (cookie: string) => {
-    const cookieStore = await getCookieStore();
-
-    const cookieData = `${cookie};`.matchAll(/\s*(.+?)\s*(?:=\s*(.+?))?\s*;/g);
-
-    const cookieNameValue = cookieData.next();
-
-    const setCookie: { [key: string]: string } = {
-        name: cookieNameValue.value?.at(1) as string,
-        value: cookieNameValue.value?.at(2) as string,
-    };
-
-    cookieData.forEach((data) => {
-        // eslint-disable-next-line prefer-const
-        let [, key, value] = data;
-
-        switch (key.toLowerCase()) {
-            case "httponly":
-                key = "httpOnly";
-                break;
-
-            case "samesite":
-                key = "sameSite";
-                break;
-
-            case "max-age":
-                key = "maxAge";
-                break;
-        }
-
-        setCookie[key] = value ?? true;
-    });
-
-    cookieStore.set(setCookie as unknown as ResponseCookie);
-};
-
-export const setCookies = async (response: Response) => {
-    response.headers.getSetCookie().forEach((cookie) => {
-        setCookie(cookie);
-    });
 };
 
 export const defaultHeaders = async (
