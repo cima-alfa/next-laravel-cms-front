@@ -22,15 +22,9 @@ export type User = {
 } | null;
 
 export const fetchAuthenticated = async (): Promise<boolean> => {
-    return await fetchApi(linkApi("api.authenticated")).then(
-        async (response) => {
-            if (!response.ok) {
-                return false;
-            }
-
-            return (await response.json())?.data.authenticated;
-        }
-    );
+    return await fetchApi(linkApi("api.authenticated"), {
+        method: "HEAD",
+    }).then((response) => response.ok);
 };
 
 export const fetchUser = async (): Promise<User> => {
