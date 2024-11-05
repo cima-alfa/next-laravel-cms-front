@@ -5,6 +5,7 @@ import { fetchApi } from "@/lib/utils/fetch";
 
 export type Page = {
     id: string;
+    permalink: string;
     title: string;
     text: string;
     [key: string]: unknown;
@@ -47,4 +48,14 @@ export const fetchPageById = async (id: string): Promise<Page | null> => {
             return (await response.json())?.data ?? null;
         }
     );
+};
+
+export const fetchPageByPermalink = async (
+    permalink: string | null
+): Promise<Page | null> => {
+    return await fetchApi(
+        linkApi("api.pages.permalink", { permalink: permalink })
+    ).then(async (response) => {
+        return (await response.json())?.data ?? null;
+    });
 };
