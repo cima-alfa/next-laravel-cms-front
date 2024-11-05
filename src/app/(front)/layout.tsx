@@ -1,13 +1,13 @@
 import "@/front-ui/assets/globals.css";
 import { link } from "@/lib/router/router";
 
-import LayoutWrapper from "@/ui/_front/components/LayoutWrapper";
-import LayoutHeader from "@/ui/_front/components/layout-header/LayoutHeader";
-import HeaderLogo from "@/ui/_front/components/layout-header/HeaderLogo";
-import PrimaryNavigationButton from "@/ui/_front/components/layout-header/PrimaryNavigationButton";
-import PrimaryNavigation from "@/ui/_front/components/layout-header/PrimaryNavigation";
-import LayoutMain from "@/ui/_front/components/LayoutMain";
-import LayoutFooter from "@/ui/_front/components/LayoutFooter";
+import LayoutWrapper from "@/front-ui/components/layout/LayoutWrapper";
+import LayoutHeader from "@/front-ui/components/layout/layout-header/LayoutHeader";
+import HeaderLogo from "@/front-ui/components/layout/layout-header/HeaderLogo";
+import PrimaryNavigationButton from "@/front-ui/components/layout/layout-header/PrimaryNavigationButton";
+import PrimaryNavigation from "@/front-ui/components/layout/layout-header/PrimaryNavigation";
+import LayoutMain from "@/front-ui/components/layout/LayoutMain";
+import LayoutFooter from "@/front-ui/components/layout/LayoutFooter";
 
 export default function Layout({
     children,
@@ -23,7 +23,7 @@ export default function Layout({
                     alt="Cima Alfa: Jeremy's Portfolio"
                 />
 
-                <PrimaryNavigationButton />
+                <PrimaryNavigationButton controls="--primary-navigation" />
 
                 <PrimaryNavigation />
             </LayoutHeader>

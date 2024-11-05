@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { pageId: string } }) {
     const page = await fetchPageById(pageId);
 
     if (!page) {
-        notFound();
+        return notFound();
     }
 
     return (

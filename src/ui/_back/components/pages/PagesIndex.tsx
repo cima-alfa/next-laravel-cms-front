@@ -20,7 +20,7 @@ export default function PagesIndex({ pages }: Props) {
                 <tr>
                     <th>Title</th>
                     <th>Text</th>
-                    <th>Actions</th>
+                    <th colSpan={3}>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +36,16 @@ export default function PagesIndex({ pages }: Props) {
                             </Link>
                         </td>
                         <td>{page.text.substring(0, 50) + "..."}</td>
+                        <td>
+                            <Link
+                                href={link("front.page.permalink", {
+                                    permalink: page.permalink,
+                                })}
+                                target="_blank"
+                            >
+                                Visit
+                            </Link>
+                        </td>
                         <td>
                             <Link
                                 href={link("front.cp.pages.edit", {
