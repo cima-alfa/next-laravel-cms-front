@@ -1,14 +1,17 @@
 import { twMerge } from "tailwind-merge";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { link } from "@/lib/router/router";
+import { fetchAuthenticated } from "@/lib/data/auth";
 
-export default function PrimaryNavigation({
+export default async function PrimaryNavigation({
     className,
     ...rest
 }: Readonly<React.HtmlHTMLAttributes<HTMLDivElement>>) {
+    const isAuthenticated = await fetchAuthenticated();
+
     return (
         <nav
-            id="primaryNav"
+            id="--primary-navigation"
             className={twMerge(
                 `
                 [grid-area:primaryNav] overflow-clip peer-[[aria-expanded='false']]:h-0 transition-[height] will-change-[height]
@@ -41,22 +44,26 @@ export default function PrimaryNavigation({
                             Contact
                         </PrimaryNavigationLink>
                     </li>
-                    <li>
-                        <PrimaryNavigationLink
-                            href={link("front.login")}
-                            title=""
-                        >
-                            Login
-                        </PrimaryNavigationLink>
-                    </li>
-                    <li>
-                        <PrimaryNavigationLink
-                            href={link("front.register")}
-                            title=""
-                        >
-                            Register
-                        </PrimaryNavigationLink>
-                    </li>
+                    {!isAuthenticated && (
+                        <>
+                            <li>
+                                <PrimaryNavigationLink
+                                    href={link("front.login")}
+                                    title=""
+                                >
+                                    Login
+                                </PrimaryNavigationLink>
+                            </li>
+                            <li>
+                                <PrimaryNavigationLink
+                                    href={link("front.register")}
+                                    title=""
+                                >
+                                    Register
+                                </PrimaryNavigationLink>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </div>
         </nav>
