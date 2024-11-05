@@ -7,7 +7,10 @@ export default function LayoutMain({
 }: Readonly<React.HtmlHTMLAttributes<HTMLDivElement>>) {
     return (
         <main
-            className={twMerge("[grid-area:main] w-full z-0 p-4", className)}
+            className={twMerge(
+                "[grid-area:main] w-full !max-w-none z-0 p-4 prose prose-light dark:prose-dark",
+                className
+            )}
             {...rest}
         >
             {children}

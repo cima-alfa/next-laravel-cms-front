@@ -19,7 +19,7 @@ export default function Layout({
             <LayoutMain>{children}</LayoutMain>
 
             <LayoutFooter>
-                &copy; {new Date().getFullYear()} CMS by Jeremy Stepanek
+                {new Date().getFullYear()} CMS by Jeremy Stepanek
             </LayoutFooter>
         </LayoutWrapper>
     );
