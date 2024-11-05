@@ -33,8 +33,8 @@ export const logout = async (pathname?: string) => {
 
 export const login = async (prevState: AuthState, formData: FormData) => {
     const data = {
-        login: formData?.get("login"),
-        password: formData?.get("password"),
+        login: formData.get("login"),
+        password: formData.get("password"),
     };
 
     const options: RequestInit = {
@@ -62,10 +62,10 @@ export const login = async (prevState: AuthState, formData: FormData) => {
 
 export const register = async (prevState: AuthState, formData: FormData) => {
     const data = {
-        username: formData?.get("username"),
-        email: formData?.get("email"),
-        password: formData?.get("password"),
-        password_confirmation: formData?.get("password_confirmation"),
+        username: formData.get("username"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+        password_confirmation: formData.get("password_confirmation"),
     };
 
     const options: RequestInit = {
