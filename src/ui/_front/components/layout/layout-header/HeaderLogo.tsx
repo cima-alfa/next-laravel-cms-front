@@ -1,7 +1,7 @@
 "use client";
 
-import LogoDark from "@/front-ui/assets/images/logo-dark-text-jeremys-portfolio.svg";
-import LogoLight from "@/front-ui/assets/images/logo-light-text-jeremys-portfolio.svg";
+import LogoDark from "@/front-ui/assets/images/logo-dark-text.svg";
+import LogoLight from "@/front-ui/assets/images/logo-light-text.svg";
 
 import { getImageProps } from "next/image";
 import { twMerge } from "tailwind-merge";
