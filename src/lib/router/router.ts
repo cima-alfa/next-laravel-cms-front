@@ -8,7 +8,7 @@ export const linkApi = (
     params?: { [key: string]: unknown }
 ) => {
     /** @ts-expect-error Generated ziggy config does not match the config interface */
-    return routeFn(name, params, true, RouterApi);
+    return routeFn(name, params, true, RouterApi) as string;
 };
 
 export type RouteName = keyof typeof RouterFront.routes;
@@ -20,7 +20,7 @@ export const link = (
 ) => {
     // try {
     /** @ts-expect-error Generated ziggy config does not match the config interface */
-    let link = routeFn(name, params, absolute, RouterFront);
+    let link = routeFn(name, params, absolute, RouterFront) as string;
 
     if (!absolute) {
         link = `/${link}`.replace(/^\/{2,}/, "/");
