@@ -1,10 +1,11 @@
 import { chain } from "@/lib/middleware";
 import { authMiddleware } from "@/lib/middleware/authMiddleware";
 import { guestMiddleware } from "@/lib/middleware/guestMiddleware";
+import { setHeadersMiddleware } from "@/lib/middleware/setHeadersMiddleware";
 import { getCurrentRoute } from "@/lib/router/router";
 import { type NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
-const middlewareChain = [guestMiddleware, authMiddleware];
+const middlewareChain = [setHeadersMiddleware, guestMiddleware, authMiddleware];
 
 const middleware = (
     request: NextRequest,
