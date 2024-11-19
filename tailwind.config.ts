@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 import type { PluginUtils } from "tailwindcss/types/config";
 import typography from "@tailwindcss/typography";
+import forms from "@tailwindcss/forms";
 import { cpColors, cpTypography } from "./src/ui/_back/assets/tailwind.config";
 
 const config: Config = {
@@ -18,7 +19,7 @@ const config: Config = {
             }),
         },
     },
-    plugins: [typography],
+    plugins: [typography, forms],
 };
 
 export default config;
