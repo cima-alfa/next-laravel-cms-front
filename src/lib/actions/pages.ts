@@ -1,7 +1,8 @@
 "use server";
 
 import { link, linkApi } from "@/lib/router/router";
-import { fetchApi } from "@/lib/utils/fetch";
+import { formDataToJson } from "@/lib/utils";
+import { fetchApi } from "@/lib/utils/server";
 import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 
@@ -10,20 +11,10 @@ export type PagesState = {
     errors?: { [key: string]: string[] };
 } | null;
 
-const toJson = (formData: FormData, ...fields: string[]) => {
-    const data: { [key: string]: unknown } = {};
-
-    fields.forEach((field) => {
-        data[field] = formData.get(field);
-    });
-
-    return JSON.stringify(data);
-};
-
 export const createPage = async (prevState: PagesState, formData: FormData) => {
     const options: RequestInit = {
         method: "POST",
-        body: toJson(formData, "title", "text"),
+        body: formDataToJson(formData, "title", "text"),
     };
 
     return fetchApi(linkApi("api.pages.store"), options, true).then(
@@ -37,66 +28,62 @@ export const createPage = async (prevState: PagesState, formData: FormData) => {
                 };
             }
 
-            redirect(link("front.cp.pages.edit", { id: data.data.id }));
+            redirect(link("front.cp.pages.edit", { pageId: data.data.id }));
         }
     );
 };
 
 export const updatePage = async (
-    id: string,
+    page: string,
     prevState: PagesState,
     formData: FormData
 ) => {
     const options: RequestInit = {
         method: "PATCH",
-        body: toJson(formData, "title", "text"),
+        body: formDataToJson(formData, "title", "text"),
     };
 
-    return fetchApi(
-        linkApi("api.pages.update", { id: id }),
-        options,
-        true
-    ).then(async (response) => {
-        const data = await response.json();
+    return fetchApi(linkApi("api.pages.update", { page }), options, true).then(
+        async (response) => {
+            const data = await response.json();
 
-        if (!response.ok) {
-            return {
-                message: data.message,
-                errors: data.errors,
-            };
+            if (!response.ok) {
+                return {
+                    message: data.message,
+                    errors: data.errors,
+                };
+            }
+
+            revalidatePath(link("front.cp.pages.index"));
+
+            return { message: data.message };
         }
-
-        revalidatePath(link("front.cp.pages.index"));
-
-        return { message: data.message };
-    });
+    );
 };
 
-export const destroyPage = async (id: string, redirectLink?: string) => {
+export const destroyPage = async (page: string, redirectLink?: string) => {
     const options: RequestInit = {
         method: "DELETE",
     };
 
-    return fetchApi(
-        linkApi("api.pages.destroy", { id: id }),
-        options,
-        true
-    ).then(async (response) => {
-        const data = await response.json();
+    return fetchApi(linkApi("api.pages.destroy", { page }), options, true).then(
+        async (response) => {
+            const data = await response.json();
 
-        if (!response.ok) {
-            return {
-                message: data.message,
-                errors: data.errors,
-            };
+            if (!response.ok) {
+                return {
+                    message: data.message,
+                    errors: data.errors,
+                };
+            }
+
+            revalidatePath(link("front.cp.pages.index"));
+
+            if (redirectLink) {
+                redirect(redirectLink, RedirectType.replace);
+            }
+
+            return { message: data.message };
         }
-
-        revalidatePath(link("front.cp.pages.index"));
-
-        if (redirectLink) {
-            redirect(redirectLink, RedirectType.replace);
-        }
-
-        return { message: data.message };
-    });
+    );
 };
