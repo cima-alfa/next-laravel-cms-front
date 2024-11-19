@@ -15,14 +15,14 @@ const inter = Inter({
 });
 
 interface Props extends React.HtmlHTMLAttributes<HTMLDivElement> {
-    initialUser: User;
+    initialUser: User | null;
 }
 
 export default function ControlPanelBar({
     className,
     initialUser,
 }: Readonly<Props>) {
-    const [user, setUser] = useState<User>(initialUser);
+    const [user, setUser] = useState<User | null>(initialUser);
     const pathname = usePathname();
 
     const logoutWithRedirect = logout.bind(null, pathname);
@@ -90,7 +90,7 @@ export default function ControlPanelBar({
                             transition-colors
                             "
                         >
-                            {user.nameDisplay}
+                            {user.name_display}
                         </ExpandButton>
 
                         <div
