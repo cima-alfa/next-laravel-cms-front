@@ -5,6 +5,7 @@ import {
     ResponseCookie,
 } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function getCookies(): Promise<RequestCookie[]>;
 
@@ -50,8 +51,8 @@ export const getCookie = async (name: string) => {
 
 export const getCookieStore = async () => await cookies();
 
-export const setCookie = async (cookie: string) => {
-    const cookieStore = await cookies();
+export const setCookie = async (cookie: string, response?: NextResponse) => {
+    const cookieStore = response?.cookies ?? (await cookies());
 
     const cookieData = `${cookie};`.matchAll(/\s*(.+?)\s*(?:=\s*(.+?))?\s*;/g);
 
@@ -86,8 +87,11 @@ export const setCookie = async (cookie: string) => {
     cookieStore.set(setCookie as unknown as ResponseCookie);
 };
 
-export const setCookies = async (cookies: string[]) => {
+export const setCookies = async (
+    cookies: string[],
+    response?: NextResponse
+) => {
     cookies.forEach((cookie) => {
-        setCookie(cookie);
+        setCookie(cookie, response);
     });
 };
