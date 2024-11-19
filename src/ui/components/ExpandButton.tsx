@@ -7,6 +7,7 @@ interface Props extends React.HtmlHTMLAttributes<HTMLButtonElement> {
     controls: string;
     expanded?: boolean;
     keepExpanded?: boolean;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function ExpandButton({
@@ -15,6 +16,7 @@ export default function ExpandButton({
     controls,
     expanded = false,
     keepExpanded = false,
+    onClick,
     ...rest
 }: Readonly<Props>) {
     const targetExpanded = useRef(expanded);
@@ -31,7 +33,9 @@ export default function ExpandButton({
         setAriaExpanded(targetExpanded.current);
     };
 
-    const handleClick = () => {
+    const handleClick = (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
         eventListener.remove(
             document,
             `click.expandButtonTargetHandler.${controls}`
@@ -42,6 +46,10 @@ export default function ExpandButton({
         toggleTargetElement(targetElement);
 
         if (!targetExpanded.current) {
+            if (onClick !== undefined) {
+                onClick(event);
+            }
+
             return;
         }
 
@@ -68,6 +76,10 @@ export default function ExpandButton({
                 );
             }
         );
+
+        if (onClick !== undefined) {
+            onClick(event);
+        }
     };
 
     return (
