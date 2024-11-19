@@ -3,6 +3,15 @@
 import "server-only";
 import { linkApi } from "@/lib/router/router";
 import { getCookie, getCookieString, setCookie } from "@/lib/utils/cookies";
+import { headers } from "next/headers";
+import { userAgent } from "next/server";
+import { sleep } from "@/lib/utils";
+
+export const simulateDelay = async (time: number, force = false) => {
+    if (force || process.env.NODE_ENV === "development") {
+        await sleep(time);
+    }
+};
 
 const getCookies = async (freshCookies: boolean) => {
     if (!freshCookies) {
@@ -46,7 +55,13 @@ const getCookies = async (freshCookies: boolean) => {
 export const defaultHeaders = async (
     freshCookies: boolean
 ): Promise<HeadersInit> => {
+    const headersList = await headers();
+    const ip = (headersList.get("x-forwarded-for") ??
+        headersList.get("x-real-ip") ??
+        headersList.get("host")) as string;
+
     const { cookies, csrfToken } = await getCookies(freshCookies);
+    const { ua: userAgentString } = userAgent({ headers: headersList });
 
     return {
         Accept: "application/json",
@@ -54,6 +69,9 @@ export const defaultHeaders = async (
         "X-Requested-With": "XMLHttpRequest",
         "X-XSRF-TOKEN": csrfToken,
         Cookie: cookies,
+        "User-Agent": userAgentString,
+        "X-Real-Ip": ip,
+        "X-Forwarded-For": ip,
     };
 };
 
