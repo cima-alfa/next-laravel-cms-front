@@ -26,6 +26,12 @@ export const cpColors = {
 
 export const cpTypography = (theme: PluginUtils["theme"]) => {
     return {
+        DEFAULT: {
+            css: {
+                maxWidth: "none",
+            },
+        },
+
         light: {
             css: {
                 "--tw-prose-body": theme("colors[cp-black][100]"),
