@@ -43,3 +43,16 @@ export const hasMiddleware = (
         (routeMiddleware) => routeMiddleware === searchMiddleware
     );
 };
+
+export const redirect = (request: NextRequest, url: string, code = 307) => {
+    if (request.headers.get("Accept") === "text/x-component") {
+        return new NextResponse(null, {
+            status: code,
+            headers: {
+                "X-Action-Redirect": url,
+            },
+        });
+    }
+
+    return NextResponse.redirect(url, code);
+};
