@@ -66,6 +66,15 @@ export default function PrimaryNavigation({
                             Pages
                         </PrimaryNavigationLink>
                     </li>
+
+                    <li>
+                        <PrimaryNavigationLink
+                            route="front.cp.users.index"
+                            title="Users"
+                        >
+                            Users
+                        </PrimaryNavigationLink>
+                    </li>
                 </ul>
 
                 <ul

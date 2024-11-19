@@ -4,6 +4,7 @@ import LayoutFooter from "@/back-ui/components/layout/LayoutFooter";
 import LayoutMain from "@/back-ui/components/layout/LayoutMain";
 import LayoutWrapper from "@/back-ui/components/layout/LayoutWrapper";
 import "@/back-ui/assets/globals.css";
+import AppTopLoader from "nextjs-toploader";
 
 export default function Layout({
     children,
@@ -11,16 +12,20 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <LayoutWrapper>
-            <LayoutHeader>
-                <PrimaryNavigation />
-            </LayoutHeader>
+        <>
+            <AppTopLoader showSpinner={false} />
 
-            <LayoutMain>{children}</LayoutMain>
+            <LayoutWrapper>
+                <LayoutHeader>
+                    <PrimaryNavigation />
+                </LayoutHeader>
 
-            <LayoutFooter>
-                {new Date().getFullYear()} CMS by Jeremy Stepanek
-            </LayoutFooter>
-        </LayoutWrapper>
+                <LayoutMain>{children}</LayoutMain>
+
+                <LayoutFooter>
+                    {new Date().getFullYear()} CMS by Jeremy Stepanek
+                </LayoutFooter>
+            </LayoutWrapper>
+        </>
     );
 }

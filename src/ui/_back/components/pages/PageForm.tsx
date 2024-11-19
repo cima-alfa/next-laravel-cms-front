@@ -10,7 +10,7 @@ interface Props {
     page?: Page;
 }
 
-export default function PageForm({ mode, page }: Props) {
+export default function PageForm({ mode, page }: Readonly<Props>) {
     let action;
 
     switch (mode) {

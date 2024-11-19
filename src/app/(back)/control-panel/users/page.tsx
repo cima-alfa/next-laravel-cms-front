@@ -1,33 +1,34 @@
-import PagesIndex from "@/back-ui/components/pages/PagesIndex";
-import { fetchPages } from "@/lib/data/pages";
+import UsersIndex from "@/back-ui/components/users/UsersIndex";
+import { fetchUser, fetchUsers, User } from "@/lib/data/auth";
 import { link } from "@/lib/router/router";
 import Link from "next/link";
 
-interface Props {
+export default async function Page({
+    searchParams,
+}: {
     searchParams: Promise<{ page?: string }>;
-}
-
-export default async function Page({ searchParams }: Readonly<Props>) {
+}) {
     const { page: paginated } = await searchParams;
 
-    const pages = await fetchPages(paginated, true);
+    const users = await fetchUsers(paginated);
+    const currentUser = (await fetchUser()) as User;
 
     const pagination = [
         {
             number: 1,
-            link: link("front.cp.pages.index"),
+            link: link("front.cp.users.index"),
         },
     ];
 
-    if (pages) {
+    if (users) {
         for (
             let pageNumber = 2;
-            pageNumber <= pages?.meta.last_page;
+            pageNumber <= users?.meta.last_page;
             pageNumber++
         ) {
             pagination.push({
                 number: pageNumber,
-                link: link("front.cp.pages.index", {
+                link: link("front.cp.users.index", {
                     page: pageNumber,
                 }),
             });
@@ -36,9 +37,9 @@ export default async function Page({ searchParams }: Readonly<Props>) {
 
     return (
         <>
-            <h1>Page Listing</h1>
+            <h1>User Listing</h1>
 
-            <PagesIndex pages={pages} />
+            <UsersIndex users={users} currentUser={currentUser} />
 
             <ul>
                 {pagination.map((page, index) => (
@@ -49,10 +50,10 @@ export default async function Page({ searchParams }: Readonly<Props>) {
             </ul>
 
             <div>
-                {pages?.meta.to} of {pages?.meta.total}
+                {users?.meta.to} of {users?.meta.total}
             </div>
 
-            <Link href={link("front.cp.pages.create")}>Create Page</Link>
+            <Link href={link("front.cp.users.create")}>Create User</Link>
         </>
     );
 }

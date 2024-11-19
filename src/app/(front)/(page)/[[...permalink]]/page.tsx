@@ -1,11 +1,11 @@
 import { fetchPageByPermalink } from "@/lib/data/pages";
 import { notFound } from "next/navigation";
 
-export default async function Page({
-    params,
-}: {
-    params: { permalink?: string };
-}) {
+interface Props {
+    params: Promise<{ permalink?: string }>;
+}
+
+export default async function Page({ params }: Readonly<Props>) {
     const { permalink } = await params;
 
     const page = await fetchPageByPermalink(permalink ?? null);

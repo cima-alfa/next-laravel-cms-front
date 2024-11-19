@@ -2,7 +2,11 @@ import PageForm from "@/back-ui/components/pages/PageForm";
 import { fetchPageById } from "@/lib/data/pages";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: { pageId: string } }) {
+interface Props {
+    params: Promise<{ pageId: string }>;
+}
+
+export default async function Page({ params }: Readonly<Props>) {
     const { pageId } = await params;
 
     const page = await fetchPageById(pageId);
