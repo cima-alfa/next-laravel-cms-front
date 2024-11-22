@@ -1,5 +1,6 @@
+import UserInvite from "@/back-ui/components/users/UserInvite";
 import UsersIndex from "@/back-ui/components/users/UsersIndex";
-import { fetchUser, fetchUsers, User } from "@/lib/data/auth";
+import { fetchUser, fetchUsers, User } from "@/lib/data/users";
 import { link } from "@/lib/router/router";
 import Link from "next/link";
 
@@ -53,7 +54,7 @@ export default async function Page({
                 {users?.meta.to} of {users?.meta.total}
             </div>
 
-            <Link href={link("front.cp.users.create")}>Create User</Link>
+            <UserInvite />
         </>
     );
 }
