@@ -3,9 +3,15 @@
 import Form from "next/form";
 import { useActionState } from "react";
 import { register } from "@/lib/actions/auth";
+import { useSearchParams } from "next/navigation";
 
 export default function Page() {
-    const [state, formAction, pending] = useActionState(register, null);
+    const params = useSearchParams();
+
+    const [state, formAction, pending] = useActionState(
+        register.bind(null, params.get("expires"), params.get("signature")),
+        null
+    );
 
     return (
         <>
