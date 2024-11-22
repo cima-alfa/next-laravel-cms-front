@@ -78,6 +78,10 @@ export const getRoute = (name: RouteName) => {
     return routes.find((route) => route.name === name);
 };
 
+export const routeExists = (name: string) => {
+    return !!routes.find((route) => route.name === name);
+};
+
 export const getCurrentRoute = (url: string): Route | null => {
     url = url.split("?")[0];
 
