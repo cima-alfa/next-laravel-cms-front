@@ -1,12 +1,19 @@
 "use client";
 
-import InputField from "@/back-ui/components/forms/InputField";
+import InputError from "@/back-ui/components/forms/InputError";
+import InputLabel from "@/back-ui/components/forms/InputLabel";
+import InputText from "@/back-ui/components/forms/InputText";
+import InputTextField from "@/back-ui/components/forms/InputTextField";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
-import { updateUser, updateUserPassword } from "@/lib/actions/auth";
-import { User } from "@/lib/data/auth";
+import { updateUser, updateUserPassword } from "@/lib/actions/users";
+import { User } from "@/lib/data/users";
+import {
+    formatPhoneCountryCode,
+    formatPhoneNumber,
+} from "@/lib/utils/helpers/strings";
 import { getDisplayNameOptions } from "@/lib/utils/helpers/users";
 import Form from "next/form";
-import { useActionState, useState } from "react";
+import { useActionState, useId, useState } from "react";
 
 interface Props {
     user: User;
@@ -20,14 +27,17 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
         updateUser,
         null
     );
+
     const [stateUsername, formActionUsername, pendingUsername] = useActionState(
         updateUser,
         null
     );
+
     const [stateEmail, formActionEmail, pendingEmail] = useActionState(
         updateUser,
         null
     );
+
     const [statePassword, formActionPassword, pendingPassword] = useActionState(
         updateUserPassword,
         null
@@ -36,9 +46,11 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
     const displayNameOptions = getDisplayNameOptions(
         user.name_first,
         user.name_second,
-        user.name_last,
-        user.username
+        user.name_last
     );
+
+    const phoneCountryCodeId = useId();
+    const phoneNumberId = useId();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         if (!editable) {
@@ -52,7 +64,8 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
         name_first: user.name_first ?? "",
         name_second: user.name_second ?? "",
         name_last: user.name_last ?? "",
-        name_display: user.name_display_plain,
+        name_display: user.name_display,
+        name_display_plain: user.name_display_plain,
         phone_prefix: user.phone_prefix ?? "",
         phone: user.phone ?? "",
     });
@@ -80,7 +93,50 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
     ) => {
         const data = { ...state };
 
-        data[event.target.name] = event.target.value;
+        switch (event.target.name) {
+            case "phone_prefix":
+                data[event.target.name] = formatPhoneCountryCode(
+                    event.target.value
+                );
+
+                break;
+
+            case "phone":
+                data[event.target.name] = formatPhoneNumber(
+                    event.target.value
+                ).trimStart();
+
+                break;
+
+            default:
+                data[event.target.name] = event.target.value;
+
+                break;
+        }
+
+        setState(data);
+    };
+
+    const handleBlur = (
+        event: React.ChangeEvent<HTMLInputElement>,
+        state: { [key: string]: string },
+        setState: React.Dispatch<
+            React.SetStateAction<{
+                [key: string]: string;
+            }>
+        >
+    ) => {
+        const data = { ...state };
+
+        switch (event.target.name) {
+            case "phone":
+                data[event.target.name] = event.target.value.replace(
+                    /^[^\d]|[^\d]$/,
+                    ""
+                );
+
+                break;
+        }
 
         setState(data);
     };
@@ -100,7 +156,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                 >
                     <input type="hidden" name="update_user" value="profile" />
 
-                    <InputField
+                    <InputText
                         label="First Name"
                         name="name_first"
                         value={formProfileState.name_first}
@@ -115,7 +171,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                         }
                     />
 
-                    <InputField
+                    <InputText
                         label="Middle Name"
                         name="name_second"
                         value={formProfileState.name_second}
@@ -130,7 +186,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                         }
                     />
 
-                    <InputField
+                    <InputText
                         label="Surname"
                         name="name_last"
                         value={formProfileState.name_last}
@@ -145,10 +201,14 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                         }
                     />
 
-                    <InputField
+                    <InputText
                         label="Display Name"
                         name="name_display"
-                        value={formProfileState.name_display}
+                        value={
+                            editable
+                                ? formProfileState.name_display_plain
+                                : formProfileState.name_display
+                        }
                         state={stateProfile}
                         datalist={displayNameOptions}
                         autoComplete="name"
@@ -162,18 +222,26 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     />
 
                     {editable ? (
-                        <div className="grid grid-cols-[min-content_1fr] gap-3">
-                            <div className="flex gap-1">
-                                <span className="self-end leading-6 py-1">
-                                    +
-                                </span>
-                                <InputField
-                                    label="Country Code"
+                        <div>
+                            <InputLabel
+                                htmlFor={phoneCountryCodeId}
+                                className="inline-block"
+                            >
+                                Country code
+                            </InputLabel>{" "}
+                            <span className="font-semibold text-sm">and</span>{" "}
+                            <InputLabel
+                                htmlFor={phoneNumberId}
+                                className="inline-block"
+                            >
+                                Phone number
+                            </InputLabel>
+                            <div className="grid grid-cols-[auto_1fr] rounded focus-within:outline focus-within:outline-2 focus-within:outline-cp-action-primary-500">
+                                <InputTextField
+                                    id={phoneCountryCodeId}
                                     name="phone_prefix"
-                                    type="number"
-                                    value={formProfileState.phone_prefix}
-                                    state={stateProfile}
-                                    className="whitespace-nowrap"
+                                    value={`+${formProfileState.phone_prefix}`}
+                                    aria-describedby={`${phoneNumberId}-error`}
                                     autoComplete="tel-country-code"
                                     onChange={(e) =>
                                         handleInput(
@@ -182,26 +250,46 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                                             setFormProfileState
                                         )
                                     }
+                                    className="w-20 focus:z-10 rounded-e-none !outline-1 text-right"
+                                    inputMode="numeric"
+                                />
+
+                                <InputTextField
+                                    id={phoneNumberId}
+                                    name="phone"
+                                    type="tel"
+                                    value={formProfileState.phone}
+                                    aria-describedby={`${phoneNumberId}-error`}
+                                    autoComplete="tel-national"
+                                    onChange={(e) =>
+                                        handleInput(
+                                            e,
+                                            formProfileState,
+                                            setFormProfileState
+                                        )
+                                    }
+                                    onBlur={(e) =>
+                                        handleBlur(
+                                            e,
+                                            formProfileState,
+                                            setFormProfileState
+                                        )
+                                    }
+                                    className="rounded-s-none !outline-1 focus:z-10"
                                 />
                             </div>
-
-                            <InputField
-                                label="Phone Number"
-                                name="phone"
-                                value={formProfileState.phone}
-                                state={stateProfile}
-                                autoComplete="tel-national"
-                                onChange={(e) =>
-                                    handleInput(
-                                        e,
-                                        formProfileState,
-                                        setFormProfileState
-                                    )
-                                }
+                            <InputError
+                                id={`${phoneNumberId}-error`}
+                                errors={[
+                                    ...(stateProfile?.errors?.[
+                                        "phone_prefix"
+                                    ] ?? []),
+                                    ...(stateProfile?.errors?.["phone"] ?? []),
+                                ]}
                             />
                         </div>
                     ) : (
-                        <InputField
+                        <InputText
                             label="Phone Number"
                             value={user.phone_number ?? ""}
                             autoComplete="tel"
@@ -219,133 +307,117 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                 </Form>
             </PanelBase>
 
-            {currentUser.id === user.id && (
-                <>
-                    <PanelBase>
-                        <h2>Information</h2>
+            <PanelBase>
+                <h2>Information</h2>
 
-                        {stateUsername?.message}
-                        <Form
-                            action={formActionUsername}
-                            onSubmit={handleSubmit}
-                            noValidate
-                            className="group grid gap-4 grid-cols-[1fr_auto] mb-5"
-                            inert={!editable}
-                        >
-                            <input
-                                type="hidden"
-                                name="update_user"
-                                value="username"
-                            />
+                {stateUsername?.message}
+                <Form
+                    action={formActionUsername}
+                    onSubmit={handleSubmit}
+                    noValidate
+                    className="group grid gap-4 grid-cols-[1fr_auto] mb-5"
+                    inert={!editable}
+                >
+                    <input type="hidden" name="update_user" value="username" />
 
-                            <InputField
-                                label="Username"
-                                name="username"
-                                value={formUsernameState.username}
-                                state={stateUsername}
-                                autoComplete="username"
-                                onChange={(e) =>
-                                    handleInput(
-                                        e,
-                                        formUsernameState,
-                                        setFormUsernameState
-                                    )
-                                }
-                            />
-
-                            {editable && (
-                                <input
-                                    type="submit"
-                                    value="save"
-                                    disabled={pendingUsername}
-                                />
-                            )}
-                        </Form>
-
-                        {stateEmail?.message}
-                        <Form
-                            action={formActionEmail}
-                            onSubmit={handleSubmit}
-                            noValidate
-                            className="group grid gap-4 grid-cols-[1fr_auto]"
-                            inert={!editable}
-                        >
-                            <input
-                                type="hidden"
-                                name="update_user"
-                                value="email"
-                            />
-
-                            <InputField
-                                label="E-Mail"
-                                name="email"
-                                value={formEmailState.email}
-                                state={stateEmail}
-                                autoComplete="email"
-                                onChange={(e) =>
-                                    handleInput(
-                                        e,
-                                        formEmailState,
-                                        setFormEmailState
-                                    )
-                                }
-                            />
-
-                            {editable && (
-                                <input
-                                    type="submit"
-                                    value="save"
-                                    disabled={pendingEmail}
-                                />
-                            )}
-                        </Form>
-                    </PanelBase>
+                    <InputText
+                        label="Username"
+                        name="username"
+                        value={formUsernameState.username}
+                        state={stateUsername}
+                        autoComplete="username"
+                        onChange={(e) =>
+                            handleInput(
+                                e,
+                                formUsernameState,
+                                setFormUsernameState
+                            )
+                        }
+                    />
 
                     {editable && (
-                        <PanelBase>
-                            <h2>Password</h2>
-
-                            {statePassword?.message}
-                            <Form
-                                action={formActionPassword}
-                                onSubmit={handleSubmit}
-                                noValidate
-                                className="group grid gap-5"
-                                inert={!editable}
-                            >
-                                <InputField
-                                    label="Current Password"
-                                    name="current_password"
-                                    type="password"
-                                    state={statePassword}
-                                    autoComplete="off"
-                                />
-
-                                <InputField
-                                    label="New Password"
-                                    name="password"
-                                    type="password"
-                                    state={statePassword}
-                                    autoComplete="new-password"
-                                />
-
-                                <InputField
-                                    label="Password Confirmation"
-                                    name="password_confirmation"
-                                    type="password"
-                                    state={statePassword}
-                                    autoComplete="off"
-                                />
-
-                                <input
-                                    type="submit"
-                                    value="save"
-                                    disabled={pendingPassword}
-                                />
-                            </Form>
-                        </PanelBase>
+                        <input
+                            type="submit"
+                            value="save"
+                            disabled={pendingUsername}
+                        />
                     )}
-                </>
+                </Form>
+
+                {stateEmail?.message}
+                <Form
+                    action={formActionEmail}
+                    onSubmit={handleSubmit}
+                    noValidate
+                    className="group grid gap-4 grid-cols-[1fr_auto]"
+                    inert={!editable}
+                >
+                    <input type="hidden" name="update_user" value="email" />
+
+                    <InputText
+                        label="E-Mail"
+                        name="email"
+                        value={formEmailState.email}
+                        state={stateEmail}
+                        autoComplete="email"
+                        onChange={(e) =>
+                            handleInput(e, formEmailState, setFormEmailState)
+                        }
+                    />
+
+                    {editable && (
+                        <input
+                            type="submit"
+                            value="save"
+                            disabled={pendingEmail}
+                        />
+                    )}
+                </Form>
+            </PanelBase>
+
+            {editable && (
+                <PanelBase>
+                    <h2>Password</h2>
+
+                    {statePassword?.message}
+                    <Form
+                        action={formActionPassword}
+                        onSubmit={handleSubmit}
+                        noValidate
+                        className="group grid gap-5"
+                        inert={!editable}
+                    >
+                        <InputText
+                            label="Current Password"
+                            name="current_password"
+                            type="password"
+                            state={statePassword}
+                            autoComplete="off"
+                        />
+
+                        <InputText
+                            label="New Password"
+                            name="password"
+                            type="password"
+                            state={statePassword}
+                            autoComplete="new-password"
+                        />
+
+                        <InputText
+                            label="Password Confirmation"
+                            name="password_confirmation"
+                            type="password"
+                            state={statePassword}
+                            autoComplete="off"
+                        />
+
+                        <input
+                            type="submit"
+                            value="save"
+                            disabled={pendingPassword}
+                        />
+                    </Form>
+                </PanelBase>
             )}
         </div>
     );
