@@ -1,7 +1,7 @@
 "use client";
 
 import { logout } from "@/lib/actions/auth";
-import { fetchUser, User } from "@/lib/data/auth";
+import { fetchUser, User } from "@/lib/data/users";
 import { link } from "@/lib/router/router";
 import ExpandButton from "@/ui/components/ExpandButton";
 import Link from "next/link";

@@ -1,5 +1,5 @@
 import UserProfile from "@/back-ui/components/users/UserProfile";
-import { fetchUser, User } from "@/lib/data/auth";
+import { fetchUser, User } from "@/lib/data/users";
 import { notFound } from "next/navigation";
 
 interface Props {

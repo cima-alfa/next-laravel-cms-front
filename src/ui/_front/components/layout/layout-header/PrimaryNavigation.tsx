@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { link } from "@/lib/router/router";
-import { fetchAuthenticated } from "@/lib/data/auth";
+import { fetchAuthenticated } from "@/lib/data/users";
 
 export default async function PrimaryNavigation({
     className,
@@ -52,14 +52,6 @@ export default async function PrimaryNavigation({
                                     title=""
                                 >
                                     Login
-                                </PrimaryNavigationLink>
-                            </li>
-                            <li>
-                                <PrimaryNavigationLink
-                                    href={link("front.register")}
-                                    title=""
-                                >
-                                    Register
                                 </PrimaryNavigationLink>
                             </li>
                         </>

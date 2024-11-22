@@ -1,6 +1,6 @@
 "use server";
 
-import { User } from "@/lib/data/auth";
+import { User } from "@/lib/data/users";
 import { link, linkApi } from "@/lib/router/router";
 import { fetchApi } from "@/lib/utils/server";
 import { simulateDelay } from "@/lib/utils/server";

@@ -1,4 +1,4 @@
-import { fetchUser } from "@/lib/data/auth";
+import { fetchUser } from "@/lib/data/users";
 import ControlPanelBarClient from "@/ui/components/ControlPanelBar/ControlPanelBar";
 
 export default async function ControlPanelBar({

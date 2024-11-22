@@ -1,5 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { fetchAuthenticated } from "@/lib/data/auth";
+import { fetchAuthenticated } from "@/lib/data/users";
 import { Route, link } from "@/lib/router/router";
 import { CustomMiddleware, redirect } from "@/lib/middleware";
 import { hasMiddleware } from "@/lib/middleware";

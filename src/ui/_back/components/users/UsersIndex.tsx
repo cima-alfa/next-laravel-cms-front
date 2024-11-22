@@ -1,7 +1,7 @@
 "use client";
 
-import { destroyUser } from "@/lib/actions/auth";
-import { User, Users } from "@/lib/data/auth";
+import { destroyUser } from "@/lib/actions/users";
+import { User, Users } from "@/lib/data/users";
 import { link } from "@/lib/router/router";
 import DateTime from "@/ui/components/DateTime";
 import Link from "next/link";
