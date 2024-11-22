@@ -1,6 +1,8 @@
 import dateFormat from "dateformat";
-import { Sessions } from "@/lib/data/auth";
+import { Sessions } from "@/lib/data/users";
 import { userAgentFromString } from "next/server";
+import { link } from "@/lib/router/router";
+import Link from "next/link";
 
 interface Props {
     sessions: Sessions;
@@ -37,7 +39,16 @@ export default function UserSessions({ sessions: _sessions }: Readonly<Props>) {
                 <tbody>
                     {sessions?.map((session, index) => (
                         <tr key={index}>
-                            <td>{session.user.name_display}</td>
+                            <td>
+                                <Link
+                                    href={link("front.cp.users.profile", {
+                                        userId: session.user.id,
+                                    })}
+                                    title={`${session.user.name_display}'s profile`}
+                                >
+                                    {session.user.name_display}
+                                </Link>
+                            </td>
                             <td>
                                 {typeof session.last_activity === "number"
                                     ? dateFormat(
