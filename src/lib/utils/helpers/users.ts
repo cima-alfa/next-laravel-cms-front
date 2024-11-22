@@ -1,8 +1,7 @@
 export const getDisplayNameOptions = (
     firstName: string | null,
     secondName: string | null,
-    lastName: string | null,
-    username: string
+    lastName: string | null
 ) => {
     const displayNameOptions: string[] = [];
 
