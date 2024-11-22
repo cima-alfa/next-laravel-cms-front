@@ -1,11 +1,15 @@
 "use server";
 
 import { hasMiddleware } from "@/lib/middleware";
-import { getCurrentRoute, link, linkApi } from "@/lib/router/router";
-import { formDataToJson } from "@/lib/utils";
+import {
+    getCurrentRoute,
+    link,
+    linkApi,
+    routeExists,
+    RouteName,
+} from "@/lib/router/router";
 import { setCookies } from "@/lib/utils/cookies";
 import { fetchApi } from "@/lib/utils/server";
-import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 
 export type AuthState = {
@@ -62,7 +66,12 @@ export const login = async (prevState: AuthState, formData: FormData) => {
     );
 };
 
-export const register = async (prevState: AuthState, formData: FormData) => {
+export const register = async (
+    expires: string | null,
+    signature: string | null,
+    prevState: AuthState,
+    formData: FormData
+) => {
     const data = {
         username: formData.get("username"),
         email: formData.get("email"),
@@ -75,81 +84,8 @@ export const register = async (prevState: AuthState, formData: FormData) => {
         body: JSON.stringify(data),
     };
 
-    return fetchApi(linkApi("register.store"), options, true).then(
-        async (response) => {
-            if (!response.ok) {
-                const data = await response.json();
-
-                return {
-                    message: data.message,
-                    errors: data.errors,
-                };
-            }
-
-            await setCookies(response.headers.getSetCookie());
-
-            redirect(link("front.verification.notice"));
-        }
-    );
-};
-
-// export const createUser = async (prevState: PagesState, formData: FormData) => {
-//     const options: RequestInit = {
-//         method: "POST",
-//         body: toJson(formData, "title", "text"),
-//     };
-
-//     return fetchApi(linkApi("register.store"), options, true).then(
-//         async (response) => {
-//             const data = await response.json();
-
-//             if (!response.ok) {
-//                 return {
-//                     message: data.message,
-//                     errors: data.errors,
-//                 };
-//             }
-
-//             redirect(link("front.cp.pages.edit", { pageId: data.data.id }));
-//         }
-//     );
-// };
-
-export const updateUser = async (prevState: AuthState, formData: FormData) => {
-    const update = formData.get("update_user");
-    const fields: string[] = [];
-
-    switch (update) {
-        case "profile":
-            fields.push(
-                "name_first",
-                "name_second",
-                "name_last",
-                "name_display",
-                "phone",
-                "phone_prefix"
-            );
-            break;
-
-        case "email":
-            fields.push("email");
-            break;
-
-        case "username":
-            fields.push("username");
-            break;
-
-        default:
-            break;
-    }
-
-    const options: RequestInit = {
-        method: "PUT",
-        body: formDataToJson(formData, "update_user", ...fields),
-    };
-
     return fetchApi(
-        linkApi("user-profile-information.update"),
+        linkApi("register.store", { expires, signature }),
         options,
         true
     ).then(async (response) => {
@@ -162,25 +98,29 @@ export const updateUser = async (prevState: AuthState, formData: FormData) => {
             };
         }
 
-        return { message: "Successfully updated" };
+        await setCookies(response.headers.getSetCookie());
+
+        const route = (
+            routeExists("front.verification.notice")
+                ? "front.verification.notice"
+                : "front.cp.dashboard.index"
+        ) as RouteName;
+
+        redirect(link(route));
     });
 };
 
-export const updateUserPassword = async (
-    prevState: AuthState,
-    formData: FormData
-) => {
-    const options: RequestInit = {
-        method: "PUT",
-        body: formDataToJson(
-            formData,
-            "current_password",
-            "password",
-            "password_confirmation"
-        ),
+export const invite = async (prevState: AuthState, formData: FormData) => {
+    const data = {
+        email: formData.get("email"),
     };
 
-    return fetchApi(linkApi("user-password.update"), options, true).then(
+    const options: RequestInit = {
+        method: "POST",
+        body: JSON.stringify(data),
+    };
+
+    return fetchApi(linkApi("api.users.invite"), options, true).then(
         async (response) => {
             if (!response.ok) {
                 const data = await response.json();
@@ -191,34 +131,9 @@ export const updateUserPassword = async (
                 };
             }
 
-            redirect(link("front.login"));
-        }
-    );
-};
-
-export const destroyUser = async (user: string, redirectLink?: string) => {
-    const options: RequestInit = {
-        method: "DELETE",
-    };
-
-    return fetchApi(linkApi("api.users.destroy", { user }), options, true).then(
-        async (response) => {
-            const data = await response.json();
-
-            if (!response.ok) {
-                return {
-                    message: data.message,
-                    errors: data.errors,
-                };
-            }
-
-            revalidatePath(link("front.cp.users.index"));
-
-            if (redirectLink) {
-                redirect(redirectLink, RedirectType.replace);
-            }
-
-            return { message: data.message };
+            return {
+                message: "User invited.",
+            };
         }
     );
 };
