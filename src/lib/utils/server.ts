@@ -8,7 +8,13 @@ import { userAgent } from "next/server";
 import { sleep } from "@/lib/utils";
 
 export const simulateDelay = async (time: number, force = false) => {
-    if (force || process.env.NODE_ENV === "development") {
+    const status =
+        ((process.env.SIMULATE_FETCH_DELAY === "null" ||
+            process.env.SIMULATE_FETCH_DELAY === null) &&
+            process.env.NODE_ENV === "development") ||
+        process.env.SIMULATE_FETCH_DELAY === "true";
+
+    if (force || status) {
         await sleep(time);
     }
 };
