@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-    color-scheme: dark light;
-    interpolate-size: allow-keywords;
+@layer base {
+    html {
+        color-scheme: dark light;
+        interpolate-size: allow-keywords;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        appearance: none;
+        margin: 0;
+    }
 }
