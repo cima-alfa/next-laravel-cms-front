@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import type { PluginUtils } from "tailwindcss/types/config";
+import containerQueries from "@tailwindcss/container-queries";
 import typography from "@tailwindcss/typography";
 import forms from "@tailwindcss/forms";
 import { cpColors, cpTypography } from "./src/ui/_back/assets/tailwind.config";
@@ -11,6 +12,9 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            containers: {
+                "8xl": "96rem",
+            },
             colors: {
                 ...cpColors,
             },
@@ -19,7 +23,7 @@ const config: Config = {
             }),
         },
     },
-    plugins: [typography, forms],
+    plugins: [containerQueries, typography, forms],
 };
 
 export default config;
