@@ -3,22 +3,28 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+        "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint"
     },
     "dependencies": {
+        "@tailwindcss/container-queries": "^0.1.1",
         "client-only": "^0.0.1",
         "clsx": "^2.1.1",
         "dateformat": "^5.0.3",
+        "lodash.set": "^4.3.2",
+        "nanoid": "^5.0.9",
         "next": "15.0.3",
         "nextjs-toploader": "^3.7.15",
         "react": "19.0.0-rc-66855b96-20241106",
         "react-dom": "19.0.0-rc-66855b96-20241106",
+        "react-icons": "^5.3.0",
+        "react-markdown": "^9.0.1",
+        "react-textarea-autosize": "^8.5.5",
         "server-only": "^0.0.1",
         "slugify": "^1.6.6",
-        "tailwind-merge": "^2.5.4",
+        "tailwind-merge": "^2.5.5",
         "urlpattern-polyfill": "^10.0.0",
         "ziggy-js": "^2.4.1"
     },
@@ -29,7 +35,8 @@
         "@tailwindcss/forms": "^0.5.9",
         "@tailwindcss/typography": "^0.5.15",
         "@types/dateformat": "^5.0.2",
-        "@types/node": "^22.9.1",
+        "@types/lodash.set": "^4.3.9",
+        "@types/node": "^22.10.1",
         "@types/react": "npm:types-react@19.0.0-rc.1",
         "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
         "autoprefixer": "^10.4.20",
@@ -40,7 +47,7 @@
         "eslint-plugin-react-hooks": "^5.0.0",
         "postcss": "^8.4.49",
         "tailwindcss": "^3.4.15",
-        "typescript": "^5.6.3"
+        "typescript": "^5.7.2"
     },
     "pnpm": {
         "overrides": {
