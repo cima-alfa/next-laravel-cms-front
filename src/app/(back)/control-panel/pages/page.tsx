@@ -1,7 +1,8 @@
-import PagesIndex from "@/back-ui/components/pages/PagesIndex";
+import PanelBase from "@/back-ui/components/layout/PanelBase";
+import PagesIndex from "@/back-ui/components/app/pages/PagesIndex";
+import PaginationLinks from "@/back-ui/components/PaginationLinks";
 import { fetchPages } from "@/lib/data/pages";
 import { link } from "@/lib/router/router";
-import Link from "next/link";
 
 interface Props {
     searchParams: Promise<{ page?: string }>;
@@ -36,23 +37,18 @@ export default async function Page({ searchParams }: Readonly<Props>) {
 
     return (
         <>
-            <h1>Page Listing</h1>
+            <h1>Pages</h1>
+            <PanelBase>
+                <PagesIndex pages={pages} />
 
-            <PagesIndex pages={pages} />
-
-            <ul>
-                {pagination.map((page, index) => (
-                    <li key={index}>
-                        <Link href={page.link}>{page.number}</Link>
-                    </li>
-                ))}
-            </ul>
-
-            <div>
-                {pages?.meta.to} of {pages?.meta.total}
-            </div>
-
-            <Link href={link("front.cp.pages.create")}>Create Page</Link>
+                {pages && (
+                    <PaginationLinks
+                        current={parseInt(paginated ?? "1")}
+                        meta={pages.meta}
+                        pagination={pagination}
+                    />
+                )}
+            </PanelBase>
         </>
     );
 }

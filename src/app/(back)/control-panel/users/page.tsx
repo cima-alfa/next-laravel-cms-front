@@ -1,8 +1,9 @@
-import UserInvite from "@/back-ui/components/users/UserInvite";
-import UsersIndex from "@/back-ui/components/users/UsersIndex";
+import PanelBase from "@/back-ui/components/layout/PanelBase";
+import PaginationLinks from "@/back-ui/components/PaginationLinks";
+import UserInvite from "@/back-ui/components/app/users/UserInvite";
+import UsersIndex from "@/back-ui/components/app/users/UsersIndex";
 import { fetchUser, fetchUsers, User } from "@/lib/data/users";
 import { link } from "@/lib/router/router";
-import Link from "next/link";
 
 export default async function Page({
     searchParams,
@@ -38,23 +39,24 @@ export default async function Page({
 
     return (
         <>
-            <h1>User Listing</h1>
+            <h1>Users</h1>
+            <div className="grid gap-4 @2xl/main:grid-cols-[1.75fr_1fr] @6xl/main:grid-cols-none @8xl/main:grid-cols-[3.25fr_1fr] items-start">
+                <PanelBase>
+                    <UsersIndex users={users} currentUser={currentUser} />
 
-            <UsersIndex users={users} currentUser={currentUser} />
+                    {users && (
+                        <PaginationLinks
+                            current={parseInt(paginated ?? "1")}
+                            meta={users.meta}
+                            pagination={pagination}
+                        />
+                    )}
+                </PanelBase>
 
-            <ul>
-                {pagination.map((page, index) => (
-                    <li key={index}>
-                        <Link href={page.link}>{page.number}</Link>
-                    </li>
-                ))}
-            </ul>
-
-            <div>
-                {users?.meta.to} of {users?.meta.total}
+                {currentUser.owner && (
+                    <UserInvite className="self-start justify-self-start w-full @8xl/main:max-w-none" />
+                )}
             </div>
-
-            <UserInvite />
         </>
     );
 }
