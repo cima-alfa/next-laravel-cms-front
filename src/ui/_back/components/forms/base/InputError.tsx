@@ -14,7 +14,7 @@ export default function InputError({
             aria-live="polite"
             aria-atomic="true"
             className={twMerge(
-                "empty:hidden text-sm text-red-500 not-prose",
+                "empty:hidden text-sm text-cp-alert-500 not-prose",
                 className
             )}
             {...rest}

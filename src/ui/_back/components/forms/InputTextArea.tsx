@@ -2,28 +2,24 @@
 
 import InputError from "@/back-ui/components/forms/base/InputError";
 import InputLabel from "@/back-ui/components/forms/base/InputLabel";
-import InputTextField from "@/back-ui/components/forms/base/InputTextField";
+import InputTextAreaField from "@/back-ui/components/forms/base/InputTextAreaField";
 import { useId } from "react";
 import slugify from "slugify";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props extends React.InputHTMLAttributes<HTMLTextAreaElement> {
     label: string;
-    type?: string;
     name?: string;
     state?: {
         [key: string]: unknown;
         errors?: { [key: string]: string[] };
     } | null;
-    datalist?: string[];
 }
 
-export default function InputText({
+export default function InputTextArea({
     className,
     label,
-    type = "text",
     name,
     state,
-    datalist,
     ...rest
 }: Readonly<Props>) {
     const _name =
@@ -40,12 +36,11 @@ export default function InputText({
             <div className={className}>
                 <InputLabel htmlFor={id}>{label}</InputLabel>
                 <div>
-                    <InputTextField
+                    {/** @ts-expect-error css height type */}
+                    <InputTextAreaField
                         id={id}
                         name={_name}
-                        type={type}
                         aria-describedby={`${id}-error`}
-                        list={datalist ? `${id}-datalist` : undefined}
                         {...rest}
                     />
 
@@ -55,14 +50,6 @@ export default function InputText({
                     />
                 </div>
             </div>
-
-            {datalist && (
-                <datalist id={`${id}-datalist`}>
-                    {datalist.map((value, index) => (
-                        <option value={value} key={index}></option>
-                    ))}
-                </datalist>
-            )}
         </>
     );
 }

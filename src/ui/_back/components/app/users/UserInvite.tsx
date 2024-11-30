@@ -1,20 +1,27 @@
 "use client";
 
 import InputText from "@/back-ui/components/forms/InputText";
+import { ChangeEvent } from "@/back-ui/components/forms";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
 import { invite } from "@/lib/actions/auth";
 import Form from "next/form";
 import { useActionState, useState } from "react";
+import ButtonBase from "@/back-ui/components/ButtonBase";
 
-export default function UserInvite() {
+export default function UserInvite({
+    className,
+    ...rest
+}: Readonly<React.HtmlHTMLAttributes<HTMLDivElement>>) {
+    const initialState = {
+        email: "",
+    };
+
     const [formState, setFormState] = useState<{
         [key: string]: string;
-    }>({
-        email: "",
-    });
+    }>(initialState);
 
     const handleInput = (
-        event: React.ChangeEvent<HTMLInputElement>,
+        event: ChangeEvent,
         state: { [key: string]: string },
         setState: React.Dispatch<
             React.SetStateAction<{
@@ -31,14 +38,17 @@ export default function UserInvite() {
 
     const [state, formAction, pending] = useActionState(invite, null);
 
+    const handleReset = () => {
+        setFormState(initialState);
+    };
+
     return (
-        <PanelBase>
+        <PanelBase className={className} {...rest}>
+            <h2>Invite User</h2>
+
             {state?.message}
-            <Form
-                action={formAction}
-                noValidate
-                className="group grid gap-4 grid-cols-[1fr_auto]"
-            >
+
+            <Form action={formAction} noValidate className="group grid gap-5">
                 <InputText
                     label="E-Mail"
                     name="email"
@@ -48,7 +58,20 @@ export default function UserInvite() {
                     onChange={(e) => handleInput(e, formState, setFormState)}
                 />
 
-                <input type="submit" value="Invite" disabled={pending} />
+                <div className="flex justify-between">
+                    <ButtonBase disabled={pending} mode="success">
+                        Invite
+                    </ButtonBase>
+
+                    <ButtonBase
+                        type="reset"
+                        disabled={pending}
+                        mode="warning"
+                        onClick={handleReset}
+                    >
+                        Reset
+                    </ButtonBase>
+                </div>
             </Form>
         </PanelBase>
     );

@@ -2,28 +2,25 @@
 
 import InputError from "@/back-ui/components/forms/base/InputError";
 import InputLabel from "@/back-ui/components/forms/base/InputLabel";
-import InputTextField from "@/back-ui/components/forms/base/InputTextField";
+import InputSelectField from "@/back-ui/components/forms/base/InputSelectField";
 import { useId } from "react";
 import slugify from "slugify";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
-    type?: string;
     name?: string;
     state?: {
         [key: string]: unknown;
         errors?: { [key: string]: string[] };
     } | null;
-    datalist?: string[];
 }
 
-export default function InputText({
+export default function InputSelect({
+    children,
     className,
     label,
-    type = "text",
     name,
     state,
-    datalist,
     ...rest
 }: Readonly<Props>) {
     const _name =
@@ -35,19 +32,21 @@ export default function InputText({
 
     const id = useId();
 
+    console.log(state?.errors);
+
     return (
         <>
             <div className={className}>
                 <InputLabel htmlFor={id}>{label}</InputLabel>
                 <div>
-                    <InputTextField
+                    <InputSelectField
                         id={id}
                         name={_name}
-                        type={type}
                         aria-describedby={`${id}-error`}
-                        list={datalist ? `${id}-datalist` : undefined}
                         {...rest}
-                    />
+                    >
+                        {children}
+                    </InputSelectField>
 
                     <InputError
                         id={`${id}-error`}
@@ -55,14 +54,6 @@ export default function InputText({
                     />
                 </div>
             </div>
-
-            {datalist && (
-                <datalist id={`${id}-datalist`}>
-                    {datalist.map((value, index) => (
-                        <option value={value} key={index}></option>
-                    ))}
-                </datalist>
-            )}
         </>
     );
 }

@@ -8,7 +8,7 @@ export default function PanelBase({
     return (
         <section
             className={twMerge(
-                `p-4 bg-cp-neutral-500 bg-opacity-10 rounded-lg prose prose-light dark:prose-dark`,
+                `p-2 sm:p-4 min-w-0 bg-cp-neutral-500 bg-opacity-10 rounded-lg prose prose-light dark:prose-dark`,
                 className
             )}
             {...rest}

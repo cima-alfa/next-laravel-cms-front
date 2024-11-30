@@ -1,19 +1,19 @@
 import { twMerge } from "tailwind-merge";
 
-export default function LayoutMain({
+export default function TableFoot({
     children,
     className,
     ...rest
-}: Readonly<React.HtmlHTMLAttributes<HTMLDivElement>>) {
+}: Readonly<React.HtmlHTMLAttributes<HTMLTableSectionElement>>) {
     return (
-        <main
+        <tfoot
             className={twMerge(
-                "@container/main [grid-area:main] z-0 px-2 py-4 sm:px-4 prose prose-light dark:prose-dark",
+                "border-cp-neutral-400 dark:border-cp-neutral-600",
                 className
             )}
             {...rest}
         >
             {children}
-        </main>
+        </tfoot>
     );
 }

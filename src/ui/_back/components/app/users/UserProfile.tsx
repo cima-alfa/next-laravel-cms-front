@@ -1,9 +1,10 @@
 "use client";
 
-import InputError from "@/back-ui/components/forms/InputError";
-import InputLabel from "@/back-ui/components/forms/InputLabel";
+import InputError from "@/back-ui/components/forms/base/InputError";
+import InputLabel from "@/back-ui/components/forms/base/InputLabel";
 import InputText from "@/back-ui/components/forms/InputText";
-import InputTextField from "@/back-ui/components/forms/InputTextField";
+import InputTextField from "@/back-ui/components/forms/base/InputTextField";
+import { ChangeEvent, FocusEvent } from "@/back-ui/components/forms";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
 import { updateUser, updateUserPassword } from "@/lib/actions/users";
 import { User } from "@/lib/data/users";
@@ -14,6 +15,7 @@ import {
 import { getDisplayNameOptions } from "@/lib/utils/helpers/users";
 import Form from "next/form";
 import { useActionState, useId, useState } from "react";
+import ButtonBase from "@/back-ui/components/ButtonBase";
 
 interface Props {
     user: User;
@@ -58,9 +60,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
         }
     };
 
-    const [formProfileState, setFormProfileState] = useState<{
-        [key: string]: string;
-    }>({
+    const initialProfileState = {
         name_first: user.name_first ?? "",
         name_second: user.name_second ?? "",
         name_last: user.name_last ?? "",
@@ -68,22 +68,30 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
         name_display_plain: user.name_display_plain,
         phone_prefix: user.phone_prefix ?? "",
         phone: user.phone ?? "",
-    });
+    };
+
+    const [formProfileState, setFormProfileState] = useState<{
+        [key: string]: string;
+    }>(initialProfileState);
+
+    const initialUsernameState = {
+        username: user.username,
+    };
 
     const [formUsernameState, setFormUsernameState] = useState<{
         [key: string]: string;
-    }>({
-        username: user.username,
-    });
+    }>(initialUsernameState);
+
+    const initialEmailState = {
+        email: user.email,
+    };
 
     const [formEmailState, setFormEmailState] = useState<{
         [key: string]: string;
-    }>({
-        email: user.email,
-    });
+    }>(initialEmailState);
 
     const handleInput = (
-        event: React.ChangeEvent<HTMLInputElement>,
+        event: ChangeEvent,
         state: { [key: string]: string },
         setState: React.Dispatch<
             React.SetStateAction<{
@@ -108,6 +116,11 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
 
                 break;
 
+            case "name_display":
+                data["name_display_plain"] = event.target.value;
+
+                break;
+
             default:
                 data[event.target.name] = event.target.value;
 
@@ -118,7 +131,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
     };
 
     const handleBlur = (
-        event: React.ChangeEvent<HTMLInputElement>,
+        event: FocusEvent,
         state: { [key: string]: string },
         setState: React.Dispatch<
             React.SetStateAction<{
@@ -139,6 +152,17 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
         }
 
         setState(data);
+    };
+
+    const handleReset = (
+        state: { [key: string]: string },
+        setState: React.Dispatch<
+            React.SetStateAction<{
+                [key: string]: string;
+            }>
+        >
+    ) => {
+        setState(state);
     };
 
     return (
@@ -298,11 +322,28 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     )}
 
                     {editable && (
-                        <input
-                            type="submit"
-                            value="save"
-                            disabled={pendingProfile}
-                        />
+                        <div className="flex justify-between">
+                            <ButtonBase
+                                disabled={pendingProfile}
+                                mode="success"
+                            >
+                                Save
+                            </ButtonBase>
+
+                            <ButtonBase
+                                type="reset"
+                                disabled={pendingProfile}
+                                mode="warning"
+                                onClick={() =>
+                                    handleReset(
+                                        initialProfileState,
+                                        setFormProfileState
+                                    )
+                                }
+                            >
+                                Reset
+                            </ButtonBase>
+                        </div>
                     )}
                 </Form>
             </PanelBase>
@@ -315,7 +356,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     action={formActionUsername}
                     onSubmit={handleSubmit}
                     noValidate
-                    className="group grid gap-4 grid-cols-[1fr_auto] mb-5"
+                    className="group grid gap-3 mb-6"
                     inert={!editable}
                 >
                     <input type="hidden" name="update_user" value="username" />
@@ -336,11 +377,28 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     />
 
                     {editable && (
-                        <input
-                            type="submit"
-                            value="save"
-                            disabled={pendingUsername}
-                        />
+                        <div className="flex justify-between">
+                            <ButtonBase
+                                disabled={pendingUsername}
+                                mode="success"
+                            >
+                                Save
+                            </ButtonBase>
+
+                            <ButtonBase
+                                type="reset"
+                                disabled={pendingUsername}
+                                mode="warning"
+                                onClick={() =>
+                                    handleReset(
+                                        initialUsernameState,
+                                        setFormUsernameState
+                                    )
+                                }
+                            >
+                                Reset
+                            </ButtonBase>
+                        </div>
                     )}
                 </Form>
 
@@ -349,7 +407,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     action={formActionEmail}
                     onSubmit={handleSubmit}
                     noValidate
-                    className="group grid gap-4 grid-cols-[1fr_auto]"
+                    className="group grid gap-3"
                     inert={!editable}
                 >
                     <input type="hidden" name="update_user" value="email" />
@@ -357,6 +415,7 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     <InputText
                         label="E-Mail"
                         name="email"
+                        type="email"
                         value={formEmailState.email}
                         state={stateEmail}
                         autoComplete="email"
@@ -366,11 +425,25 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                     />
 
                     {editable && (
-                        <input
-                            type="submit"
-                            value="save"
-                            disabled={pendingEmail}
-                        />
+                        <div className="flex justify-between">
+                            <ButtonBase disabled={pendingEmail} mode="success">
+                                Save
+                            </ButtonBase>
+
+                            <ButtonBase
+                                type="reset"
+                                disabled={pendingEmail}
+                                mode="warning"
+                                onClick={() =>
+                                    handleReset(
+                                        initialEmailState,
+                                        setFormEmailState
+                                    )
+                                }
+                            >
+                                Reset
+                            </ButtonBase>
+                        </div>
                     )}
                 </Form>
             </PanelBase>
@@ -411,11 +484,22 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
                             autoComplete="off"
                         />
 
-                        <input
-                            type="submit"
-                            value="save"
-                            disabled={pendingPassword}
-                        />
+                        <div className="flex justify-between">
+                            <ButtonBase
+                                disabled={pendingPassword}
+                                mode="success"
+                            >
+                                Save
+                            </ButtonBase>
+
+                            <ButtonBase
+                                type="reset"
+                                disabled={pendingPassword}
+                                mode="warning"
+                            >
+                                Reset
+                            </ButtonBase>
+                        </div>
                     </Form>
                 </PanelBase>
             )}

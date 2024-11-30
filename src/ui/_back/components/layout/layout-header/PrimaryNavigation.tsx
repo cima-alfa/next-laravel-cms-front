@@ -1,11 +1,14 @@
 import PrimaryNavigationButton from "@/back-ui/components/layout/layout-header/PrimaryNavigationButton";
 import PrimaryNavigationLink from "@/back-ui/components/layout/layout-header/PrimaryNavigationLink";
+import { fetchUser } from "@/lib/data/users";
 import { twMerge } from "tailwind-merge";
 
-export default function PrimaryNavigation({
+export default async function PrimaryNavigation({
     className,
     ...rest
 }: Readonly<React.HtmlHTMLAttributes<HTMLDivElement>>) {
+    const user = await fetchUser();
+
     return (
         <nav
             className={twMerge(
@@ -82,14 +85,16 @@ export default function PrimaryNavigation({
                     grid gap-2 mb-2 md:self-end md:mb-0
                     "
                 >
-                    <li>
-                        <PrimaryNavigationLink
-                            route="front.cp.settings.index"
-                            title="Control Panel Settings"
-                        >
-                            Settings
-                        </PrimaryNavigationLink>
-                    </li>
+                    {user?.owner && (
+                        <li>
+                            <PrimaryNavigationLink
+                                route="front.cp.settings.index"
+                                title="Control Panel Settings"
+                            >
+                                Settings
+                            </PrimaryNavigationLink>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>
