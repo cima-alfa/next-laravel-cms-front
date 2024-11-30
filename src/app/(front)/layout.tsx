@@ -18,7 +18,7 @@ export default function Layout({
         <LayoutWrapper>
             <LayoutHeader>
                 <HeaderLogo
-                    href={link("front.page.permalink")}
+                    href={link("front.page.permalink", { permalink: "" })}
                     title="Jeremy's Portfolio"
                     alt="Cima Alfa: Jeremy's Portfolio"
                 />

@@ -69,7 +69,9 @@ export default function ControlPanelBar({
                             CP
                         </Link>
                         <Link
-                            href={link("front.page.permalink")}
+                            href={link("front.page.permalink", {
+                                permalink: "",
+                            })}
                             title="Front Page"
                             className="
                             grid content-center h-full px-5
@@ -77,7 +79,7 @@ export default function ControlPanelBar({
                             transition-colors
                             "
                         >
-                            Front Page
+                            FP
                         </Link>
                     </div>
 
