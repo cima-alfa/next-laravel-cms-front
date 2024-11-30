@@ -14,7 +14,7 @@ export type PagesState = {
 export const createPage = async (prevState: PagesState, formData: FormData) => {
     const options: RequestInit = {
         method: "POST",
-        body: formDataToJson(formData, "title", "text"),
+        body: formDataToJson(formData, "title", "text", "published"),
     };
 
     return fetchApi(linkApi("api.pages.store"), options, true).then(
@@ -40,7 +40,7 @@ export const updatePage = async (
 ) => {
     const options: RequestInit = {
         method: "PATCH",
-        body: formDataToJson(formData, "title", "text"),
+        body: formDataToJson(formData, "title", "text", "published"),
     };
 
     return fetchApi(linkApi("api.pages.update", { page }), options, true).then(
@@ -59,6 +59,45 @@ export const updatePage = async (
             return { message: data.message };
         }
     );
+};
+
+export const updatePageMetadata = async (
+    page: string,
+    prevState: PagesState,
+    formData: FormData
+) => {
+    const options: RequestInit = {
+        method: "PATCH",
+        body: formDataToJson(
+            formData,
+            "permalink",
+            "title",
+            "description",
+            "robots",
+            "sitemap_include",
+            "sitemap_prio",
+            "sitemap_change_freq"
+        ),
+    };
+
+    return fetchApi(
+        linkApi("api.pages.updateMetadata", { page }),
+        options,
+        true
+    ).then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                message: data.message,
+                errors: data.errors,
+            };
+        }
+
+        revalidatePath(link("front.cp.pages.index"));
+
+        return { message: data.message };
+    });
 };
 
 export const destroyPage = async (page: string, redirectLink?: string) => {
