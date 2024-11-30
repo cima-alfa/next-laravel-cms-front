@@ -8,6 +8,7 @@ export type User = {
     id: string;
     username: string;
     email: string;
+    owner: boolean;
     name_display: string;
     name_display_plain: string;
     name_first: string | null;

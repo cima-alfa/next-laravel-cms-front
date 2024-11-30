@@ -28,10 +28,13 @@ import { redirect, RedirectType } from "next/navigation";
 //     );
 // };
 
-export type UserState = {
-    message?: string;
-    errors?: { [key: string]: string[] };
-} | null;
+export type UserState =
+    | {
+          message?: string;
+          errors?: { [key: string]: string[] };
+      }
+    | null
+    | undefined;
 
 export const updateUser = async (
     prevState: UserState,
