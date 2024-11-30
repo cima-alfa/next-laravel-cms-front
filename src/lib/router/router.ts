@@ -2,11 +2,26 @@ import { route as routeFn, Router } from "ziggy-js";
 import { Ziggy as RouterApi } from "@/lib/router/router-api";
 import { Ziggy as RouterFront } from "@/lib/router/router-front";
 import { URLPattern } from "urlpattern-polyfill/urlpattern";
+import { Page } from "@/lib/data/pages";
+
+export const searchParamsToObject = (searchParams: URLSearchParams) => {
+    const params: { [key: string]: unknown } = {};
+
+    searchParams.forEach((value, key) => {
+        params[key] = value;
+    });
+
+    return params;
+};
 
 export const linkApi = (
     name: keyof typeof RouterApi.routes,
-    params?: { [key: string]: unknown }
+    params?: { [key: string]: unknown } | URLSearchParams
 ) => {
+    if (params instanceof URLSearchParams) {
+        params = searchParamsToObject(params);
+    }
+
     /** @ts-expect-error Generated ziggy config does not match the config interface */
     return routeFn(name, params, true, RouterApi) as string;
 };
@@ -15,9 +30,13 @@ export type RouteName = keyof typeof RouterFront.routes;
 
 export const link = (
     name: RouteName,
-    params?: { [key: string]: unknown },
+    params?: { [key: string]: unknown } | URLSearchParams,
     absolute = false
 ) => {
+    if (params instanceof URLSearchParams) {
+        params = searchParamsToObject(params);
+    }
+
     // try {
     /** @ts-expect-error Generated ziggy config does not match the config interface */
     let link = routeFn(name, params, absolute, RouterFront) as string;
@@ -32,6 +51,40 @@ export const link = (
     //     }
 };
 
+export const permalink = (
+    page: Page,
+    params?: { [key: string]: unknown } | URLSearchParams,
+    absolute = false
+) => {
+    if (params instanceof URLSearchParams) {
+        params = searchParamsToObject(params);
+    }
+    params ??= {};
+
+    params.permalink = page.meta.frontpage ? "" : page.meta.permalink;
+
+    // try {
+
+    /** @ts-expect-error Generated ziggy config does not match the config interface */
+    let link = routeFn(
+        "front.page.permalink",
+        params,
+        absolute,
+        RouterFront
+    ) as string;
+
+    if (!absolute) {
+        link = `/${link}`.replace(/^\/{2,}/, "/");
+    }
+
+    return link;
+    //     } catch {
+    //         return `#${name}-not-found`;
+    //     }
+};
+
+export type RouteSegments = { [key: string]: string | undefined };
+
 export type Route = {
     name: RouteName;
     data: {
@@ -44,6 +97,7 @@ export type Route = {
         [key: string]: unknown;
     };
     pattern: URLPattern;
+    segments?: RouteSegments;
 };
 
 export type Routes = Route[];
@@ -95,6 +149,16 @@ export const getCurrentRoute = (url: string): Route | null => {
         const route = routes[index];
 
         if (route.pattern.test(url)) {
+            route.segments = {};
+
+            Object.entries(route.pattern.exec(url)?.pathname.groups ?? {}).map(
+                (group) => {
+                    if (route.data.wheres?.[group[0]] !== undefined) {
+                        (route.segments as RouteSegments)[group[0]] = group[1];
+                    }
+                }
+            );
+
             return route;
         }
     }
