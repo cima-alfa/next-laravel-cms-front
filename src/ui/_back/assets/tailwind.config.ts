@@ -34,6 +34,7 @@ export const cpTypography = (theme: PluginUtils["theme"]) => {
 
         light: {
             css: {
+                a: { color: theme("colors[cp-action-secondary][800]") },
                 "--tw-prose-body": theme("colors[cp-black][100]"),
                 "--tw-prose-headings": "inherit",
                 "--tw-prose-lead": "inherit",
@@ -75,6 +76,7 @@ export const cpTypography = (theme: PluginUtils["theme"]) => {
 
         dark: {
             css: {
+                a: { color: theme("colors[cp-action-secondary][200]") },
                 "--tw-prose-body": theme("colors[cp-white][100]"),
                 "--tw-prose-headings": "inherit",
                 "--tw-prose-lead": "inherit",
