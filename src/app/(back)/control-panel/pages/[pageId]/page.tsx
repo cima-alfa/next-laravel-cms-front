@@ -1,4 +1,4 @@
-import PageForm from "@/back-ui/components/pages/PageForm";
+import PageForm from "@/back-ui/components/app/pages/PageForm";
 import { fetchPageById } from "@/lib/data/pages";
 import { notFound } from "next/navigation";
 

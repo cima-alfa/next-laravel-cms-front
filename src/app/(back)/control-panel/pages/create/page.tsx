@@ -1,4 +1,4 @@
-import PageForm from "@/back-ui/components/pages/PageForm";
+import PageForm from "@/back-ui/components/app/pages/PageForm";
 
 export default function Page() {
     return (

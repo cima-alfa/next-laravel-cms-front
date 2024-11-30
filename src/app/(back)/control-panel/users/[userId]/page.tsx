@@ -1,4 +1,4 @@
-import UserProfile from "@/back-ui/components/users/UserProfile";
+import UserProfile from "@/back-ui/components/app/users/UserProfile";
 import { fetchUser, User } from "@/lib/data/users";
 import { notFound } from "next/navigation";
 

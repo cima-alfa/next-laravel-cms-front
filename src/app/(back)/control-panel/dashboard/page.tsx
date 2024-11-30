@@ -1,4 +1,4 @@
-import UserSessions from "@/back-ui/components/dashboard/UserSessions";
+import UserSessions from "@/back-ui/components/app/dashboard/UserSessions";
 import { fetchUserSessions } from "@/lib/data/users";
 
 export default async function Page() {
