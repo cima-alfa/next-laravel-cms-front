@@ -14,7 +14,7 @@ export default async function Page() {
         <>
             <h1>Settings</h1>
 
-            <div className="grid grid-cols-3 gap-4 items-start">
+            <div className="grid @3xl/main:grid-cols-2 @7xl/main:grid-cols-3 gap-4 items-start">
                 <PanelBase>
                     <h2>General</h2>
                     <GeneralSettingsForm settings={settings} pages={pages} />
