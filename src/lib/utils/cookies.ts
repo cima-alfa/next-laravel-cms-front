@@ -84,6 +84,8 @@ export const setCookie = async (cookie: string, response?: NextResponse) => {
         setCookie[key] = value ?? true;
     });
 
+    console.log(setCookie);
+
     cookieStore.set(setCookie as unknown as ResponseCookie);
 };
 
