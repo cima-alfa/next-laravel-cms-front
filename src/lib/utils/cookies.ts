@@ -55,6 +55,7 @@ export const setCookie = async (cookie: string, response?: NextResponse) => {
     const cookieStore = response?.cookies ?? (await cookies());
 
     const cookieData = `${cookie};`.matchAll(/\s*(.+?)\s*(?:=\s*(.+?))?\s*;/g);
+    console.log(cookieData);
 
     const cookieNameValue = cookieData.next();
 
@@ -62,7 +63,7 @@ export const setCookie = async (cookie: string, response?: NextResponse) => {
         name: cookieNameValue.value?.at(1) as string,
         value: cookieNameValue.value?.at(2) as string,
     };
-
+    console.log(cookieData);
     cookieData.forEach((data) => {
         // eslint-disable-next-line prefer-const
         let [, key, value] = data;
@@ -83,8 +84,6 @@ export const setCookie = async (cookie: string, response?: NextResponse) => {
 
         setCookie[key] = value ?? true;
     });
-
-    console.log(setCookie);
 
     cookieStore.set(setCookie as unknown as ResponseCookie);
 };
