@@ -32,8 +32,6 @@ export default function InputSelect({
 
     const id = useId();
 
-    console.log(state?.errors);
-
     return (
         <>
             <div className={className}>
