@@ -1,14 +1,14 @@
-import set from "lodash.set";
+import set from "lodash/fp/set";
 
 export const sleep = async (time: number) => {
     await new Promise((resolve) => setTimeout(resolve, time * 1000));
 };
 
 export const formDataToObject = (formData: FormData, ...fields: string[]) => {
-    const data: { [key: string]: unknown } = {};
+    let data: { [key: string]: unknown } = {};
 
     fields.forEach((field) => {
-        set(data, field, formData.get(field));
+        data = set(field, formData.get(field), data);
     });
 
     return data;
