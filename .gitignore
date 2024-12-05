@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 # router
-src/lib/router/*
-!src/lib/router/router.ts
+# src/lib/router/*
+# !src/lib/router/router.ts
