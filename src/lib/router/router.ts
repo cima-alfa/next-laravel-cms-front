@@ -51,7 +51,7 @@ export const link = (
     if (absolute) {
         link = FrontUrl + link;
     }
-    console.log(link);
+
     return link;
     //     } catch {
     //         return `#${name}-not-found`;
