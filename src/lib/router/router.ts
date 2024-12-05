@@ -4,6 +4,9 @@ import { Ziggy as RouterFront } from "@/lib/router/router-front";
 import { URLPattern } from "urlpattern-polyfill/urlpattern";
 import { Page } from "@/lib/data/pages";
 
+export const FrontUrl = process.env.NEXT_PUBLIC_FRONT_URL;
+export const ApiUrl = process.env.API_URL;
+
 export const searchParamsToObject = (searchParams: URLSearchParams) => {
     const params: { [key: string]: unknown } = {};
 
@@ -23,7 +26,9 @@ export const linkApi = (
     }
 
     /** @ts-expect-error Generated ziggy config does not match the config interface */
-    return routeFn(name, params, true, RouterApi) as string;
+    const link = routeFn(name, params, false, RouterApi) as string;
+
+    return ApiUrl + link;
 };
 
 export type RouteName = keyof typeof RouterFront.routes;
@@ -39,12 +44,14 @@ export const link = (
 
     // try {
     /** @ts-expect-error Generated ziggy config does not match the config interface */
-    let link = routeFn(name, params, absolute, RouterFront) as string;
+    let link = routeFn(name, params, false, RouterFront) as string;
 
-    if (!absolute) {
-        link = `/${link}`.replace(/^\/{2,}/, "/");
+    link = `/${link}`.replace(/^\/{2,}/, "/");
+
+    if (absolute) {
+        link = FrontUrl + link;
     }
-
+    console.log(link);
     return link;
     //     } catch {
     //         return `#${name}-not-found`;
@@ -69,12 +76,14 @@ export const permalink = (
     let link = routeFn(
         "front.page.permalink",
         params,
-        absolute,
+        false,
         RouterFront
     ) as string;
 
-    if (!absolute) {
-        link = `/${link}`.replace(/^\/{2,}/, "/");
+    link = `/${link}`.replace(/^\/{2,}/, "/");
+
+    if (absolute) {
+        link = FrontUrl + link;
     }
 
     return link;
@@ -142,7 +151,7 @@ export const getCurrentRoute = (url: string): Route | null => {
     try {
         new URL(url);
     } catch {
-        url = process.env.NEXT_PUBLIC_FRONT_URL + url;
+        url = FrontUrl + url;
     }
 
     for (let index = 0; index < routes.length; index++) {
