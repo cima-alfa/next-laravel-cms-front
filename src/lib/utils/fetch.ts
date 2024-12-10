@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { userAgent } from "next/server";
 import { sleep } from "@/lib/utils";
 
-export const simulateDelay = async (time: number, force = false) => {
+export const simulateDelay = async (seconds: number, force = false) => {
     const status =
         ((process.env.SIMULATE_FETCH_DELAY === "null" ||
             process.env.SIMULATE_FETCH_DELAY === null) &&
@@ -15,7 +15,7 @@ export const simulateDelay = async (time: number, force = false) => {
         process.env.SIMULATE_FETCH_DELAY === "true";
 
     if (force || status) {
-        await sleep(time);
+        await sleep(seconds);
     }
 };
 
@@ -90,6 +90,10 @@ export const fetchApi = async (
         init = { headers: {} };
     }
 
+    if (init.method === undefined) {
+        init.method = "GET";
+    }
+
     init.credentials = "include";
     init.referrer = FrontUrl as string;
 
@@ -104,10 +108,26 @@ export const fetchApi = async (
 };
 
 export const apiData = async (url: string, init?: RequestInit) => {
+    if (init === undefined) {
+        init = {};
+    }
+
+    if (init.method === undefined) {
+        init.method = "GET";
+    }
+
     return fetchApi(url, init, false);
 };
 
 export const apiAction = async (url: string, init?: RequestInit) => {
+    if (init === undefined) {
+        init = {};
+    }
+
+    if (init.method === undefined) {
+        init.method = "POST";
+    }
+
     return fetchApi(url, init, true);
 };
 
