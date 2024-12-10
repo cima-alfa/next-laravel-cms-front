@@ -146,7 +146,7 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
 
     Gets a front route by name. Returns `Route`.
 
--   ##### `routeExists(name: RouteName)`
+-   ##### `routeExists(name: string)`
 
     Checks if a front route exists by name and returns `bool`.
 
