@@ -161,8 +161,41 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
 
 ---
 
-### Fetch (`@cms/fetch`)
+### Fetching (`@cms/fetch`)
 
 Server only fetching. Automatically sets headers neccessary for correct communication between the frontend and API, such as: Content Type and AJAX headers, XSRF Token, Correct IP and User Agent and Cookies.
 
 Because it's a server to server communication (the Next.js server acts as a proxy), the IP and User Agent need to be set manually. Otherwise the API will receive the IP and User Agent of the Next.js server instead of the client.
+
+#### Delay Simulation
+
+In any server action you can call an async function to simulate a longer response time of a fetch. By default it will only run in development mode. You can force it globally by setting the `SIMULATE_FETCH_DELAY` env variable to `true`. Or disable it completely by setting it to `false`.
+
+-   ##### `async simulateDelay(seconds: number, force = false)`
+
+    Accepts a number of seconds the delay should last. You can also individually force the delay in production by setting the `force` argument to `true`.
+
+#### Headers
+
+-   ##### `async defaultHeaders(freshCookies: boolean)`
+
+    Returns a `HeadersInit` object with all the necessary default headers for fetching the API. \
+    Accepts a `freshCookies` `boolean` parameter to refresh the cookies used in the fetch request, including the `XSRF` token.
+
+#### Fetch
+
+-   ##### `async fetchCsrf()`
+
+    Fetches a fresh `XSRF` token from the API.
+
+-   ##### `async fetchApi(url: string, init?: RequestInit, freshCookies = false)`
+
+    Fetches a specific API endpoint. Automatically includes default headers and cookies. Additional request configuration can be included by passing a `RequestInit` object to the `init` parameter. To refresh the cookies before the request, set the `freshCookies` parameter to `true`.
+
+-   ##### `async apiData(url: string, init?: RequestInit)`
+
+    Helper `fetchApi` function to get API data. Does not refresh cookies. Default method is `GET`.
+
+-   ##### `async apiAction(url: string, init?: RequestInit)`
+
+    Helper `fetchApi` function to perform an API action. Refreshes cookies. Default method is `POST`.
