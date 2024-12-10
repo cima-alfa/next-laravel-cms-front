@@ -16,7 +16,7 @@
     -   Run `pnpm dev` or `npm run dev`
 -   Default hosts for frontend and api are `localhost:3000` and `localhost:8000` respectively
 
-### Router
+### App Router
 
 The public area pages can be found in `src/app/(front)`. By default, the authentication basic page UI is provided.
 
