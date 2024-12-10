@@ -1,7 +1,7 @@
 import dateFormat from "dateformat";
 import { Sessions } from "@/lib/data/users";
 import { userAgentFromString } from "next/server";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 import Link from "next/link";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
 import TableContainer from "@/back-ui/components/tables/TableContainer";

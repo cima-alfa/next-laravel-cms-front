@@ -18,6 +18,11 @@
             }
         ],
         "paths": {
+            "@cms/router": ["./src/lib/utils/router/_router"],
+            "@cms/hooks": ["./src/lib/utils/hooks/_hooks"],
+            "@cms/helpers": ["./src/lib/utils/helpers/_helpers"],
+            "@cms/events": ["./src/lib/utils/events"],
+            "@cms/fetch": ["./src/lib/utils/fetch"],
             "@/back-ui/*": ["./src/ui/_back/*"],
             "@/front-ui/*": ["./src/ui/_front/*"],
             "@/*": ["./src/*"],

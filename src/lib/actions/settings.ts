@@ -1,8 +1,8 @@
 "use server";
 
-import { link, linkApi } from "@/lib/router/router";
+import { link, linkApi } from "@cms/router";
 import { formDataToObject } from "@/lib/utils";
-import { fetchApi } from "@/lib/utils/server";
+import { apiAction } from "@cms/fetch";
 import { revalidatePath } from "next/cache";
 
 export type SettingsState = {
@@ -64,29 +64,27 @@ export const updateSettings = async (
         body: JSON.stringify(settings),
     };
 
-    return fetchApi(
-        linkApi("api.settings.update", { type }),
-        options,
-        true
-    ).then(async (response) => {
-        const data = await response.json();
+    return apiAction(linkApi("api.settings.update", { type }), options).then(
+        async (response) => {
+            const data = await response.json();
 
-        if (!response.ok) {
-            const errors: { [key: string]: string[] } = {};
+            if (!response.ok) {
+                const errors: { [key: string]: string[] } = {};
 
-            Object.entries(data.errors ?? {}).map((error) => {
-                errors[error[0].replace(/^settings\./, "")] =
-                    error[1] as string[];
-            });
+                Object.entries(data.errors ?? {}).map((error) => {
+                    errors[error[0].replace(/^settings\./, "")] =
+                        error[1] as string[];
+                });
 
-            return {
-                message: data.message,
-                errors,
-            };
+                return {
+                    message: data.message,
+                    errors,
+                };
+            }
+
+            revalidatePath(link("front.cp.settings.index"));
+
+            return { message: data.message };
         }
-
-        revalidatePath(link("front.cp.settings.index"));
-
-        return { message: data.message };
-    });
+    );
 };

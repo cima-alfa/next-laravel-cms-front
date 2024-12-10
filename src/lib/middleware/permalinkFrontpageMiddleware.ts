@@ -1,5 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { Route, permalink } from "@/lib/router/router";
+import { Route, permalink } from "@cms/router";
 import { CustomMiddleware, redirect } from "@/lib/middleware";
 import { hasMiddleware } from "@/lib/middleware";
 import { fetchPageByPermalink } from "@/lib/data/pages";

@@ -1,7 +1,7 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { Route } from "@/lib/router/router";
+import { Route } from "@cms/router";
 import { CustomMiddleware } from "@/lib/middleware";
-import { fetchCsrf } from "@/lib/utils/server";
+import { fetchCsrf } from "@cms/fetch";
 import { setCookies } from "@/lib/utils/cookies";
 
 export const setHeadersMiddleware = (

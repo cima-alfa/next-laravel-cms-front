@@ -1,8 +1,8 @@
 "use server";
 
-import { link, linkApi } from "@/lib/router/router";
+import { link, linkApi } from "@cms/router";
 import { formDataToJson } from "@/lib/utils";
-import { fetchApi } from "@/lib/utils/server";
+import { apiAction } from "@cms/fetch";
 import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 
@@ -17,7 +17,7 @@ export const createPage = async (prevState: PagesState, formData: FormData) => {
         body: formDataToJson(formData, "title", "text", "published"),
     };
 
-    return fetchApi(linkApi("api.pages.store"), options, true).then(
+    return apiAction(linkApi("api.pages.store"), options).then(
         async (response) => {
             const data = await response.json();
 
@@ -43,7 +43,7 @@ export const updatePage = async (
         body: formDataToJson(formData, "title", "text", "published"),
     };
 
-    return fetchApi(linkApi("api.pages.update", { page }), options, true).then(
+    return apiAction(linkApi("api.pages.update", { page }), options).then(
         async (response) => {
             const data = await response.json();
 
@@ -80,10 +80,9 @@ export const updatePageMetadata = async (
         ),
     };
 
-    return fetchApi(
+    return apiAction(
         linkApi("api.pages.updateMetadata", { page }),
-        options,
-        true
+        options
     ).then(async (response) => {
         const data = await response.json();
 
@@ -105,7 +104,7 @@ export const destroyPage = async (page: string, redirectLink?: string) => {
         method: "DELETE",
     };
 
-    return fetchApi(linkApi("api.pages.destroy", { page }), options, true).then(
+    return apiAction(linkApi("api.pages.destroy", { page }), options).then(
         async (response) => {
             const data = await response.json();
 

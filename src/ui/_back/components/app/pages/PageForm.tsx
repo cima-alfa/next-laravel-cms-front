@@ -21,7 +21,7 @@ import {
     DeleteAction,
     ViewAction,
 } from "@/back-ui/components/tables/TableActions";
-import { link, permalink } from "@/lib/router/router";
+import { link, permalink } from "@cms/router";
 
 interface Props {
     mode: "create" | "edit";

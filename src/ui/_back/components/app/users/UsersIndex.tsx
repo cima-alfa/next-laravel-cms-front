@@ -11,7 +11,7 @@ import TableHeadingCell from "@/back-ui/components/tables/TableHeadingCell";
 import TableRow from "@/back-ui/components/tables/TableRow";
 import { destroyUser } from "@/lib/actions/users";
 import { User, Users } from "@/lib/data/users";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 import DateTime from "@/ui/components/DateTime";
 import clsx from "clsx";
 import Link from "next/link";

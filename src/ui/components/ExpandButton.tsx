@@ -1,6 +1,6 @@
 "use client";
 
-import eventListener from "@/lib/utils/events";
+import eventListener from "@cms/events";
 import { useRef, useState } from "react";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLButtonElement> {

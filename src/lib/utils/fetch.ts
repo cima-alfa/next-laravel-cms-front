@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { linkApi } from "@/lib/router/router";
+import { FrontUrl, linkApi } from "@cms/router";
 import { getCookie, getCookieString, setCookie } from "@/lib/utils/cookies";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
@@ -91,7 +91,7 @@ export const fetchApi = async (
     }
 
     init.credentials = "include";
-    init.referrer = process.env.NEXT_PUBLIC_FRONT_URL as string;
+    init.referrer = FrontUrl as string;
 
     const _defaultHeaders = await defaultHeaders(freshCookies);
 
@@ -103,12 +103,20 @@ export const fetchApi = async (
     return fetch(url, init);
 };
 
+export const apiData = async (url: string, init?: RequestInit) => {
+    return fetchApi(url, init, false);
+};
+
+export const apiAction = async (url: string, init?: RequestInit) => {
+    return fetchApi(url, init, true);
+};
+
 export const fetchCsrf = async () => {
     const headers = await defaultHeaders(false);
 
     return fetch(linkApi("sanctum.csrf-cookie"), {
         credentials: "include",
         headers: headers,
-        referrer: process.env.NEXT_PUBLIC_FRONT_URL as string,
+        referrer: FrontUrl as string,
     });
 };

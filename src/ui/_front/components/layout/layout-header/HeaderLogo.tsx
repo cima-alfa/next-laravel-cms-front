@@ -8,7 +8,7 @@ import { twMerge } from "tailwind-merge";
 
 import Link from "next/link";
 import { useRef } from "react";
-import { useSetSourceMedia } from "@/lib/utils/theme";
+import { useSetSourceMedia } from "@cms/hooks";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLAnchorElement> {
     href: string;

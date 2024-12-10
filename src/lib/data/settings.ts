@@ -1,8 +1,8 @@
 "use server";
 
-import { linkApi } from "@/lib/router/router";
-import { fetchApi } from "@/lib/utils/server";
-import { simulateDelay } from "@/lib/utils/server";
+import { linkApi } from "@cms/router";
+import { apiData } from "@cms/fetch";
+import { simulateDelay } from "@cms/fetch";
 
 export type Settings = {
     [key: string]: string | null;
@@ -11,7 +11,7 @@ export type Settings = {
 export const fetchSettings = async (): Promise<Settings> => {
     await simulateDelay(1);
 
-    return await fetchApi(linkApi("api.settings.index")).then(
+    return await apiData(linkApi("api.settings.index")).then(
         async (response) => {
             const settings: Settings = {};
 

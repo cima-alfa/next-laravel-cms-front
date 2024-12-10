@@ -1,11 +1,10 @@
 import { route as routeFn, Router } from "ziggy-js";
-import { Ziggy as RouterApi } from "@/lib/router/router-api";
-import { Ziggy as RouterFront } from "@/lib/router/router-front";
+import { RouterConfigApi, RouterConfigFront } from "@cms/router";
 import { URLPattern } from "urlpattern-polyfill/urlpattern";
 import { Page } from "@/lib/data/pages";
 
-export const FrontUrl = process.env.NEXT_PUBLIC_FRONT_URL;
-export const ApiUrl = process.env.API_URL;
+export const FrontUrl = process.env.NEXT_PUBLIC_FRONT_URL as string;
+export const ApiUrl = process.env.API_URL as string;
 
 export const searchParamsToObject = (searchParams: URLSearchParams) => {
     const params: { [key: string]: unknown } = {};
@@ -18,7 +17,7 @@ export const searchParamsToObject = (searchParams: URLSearchParams) => {
 };
 
 export const linkApi = (
-    name: keyof typeof RouterApi.routes,
+    name: keyof typeof RouterConfigApi.routes,
     params?: { [key: string]: unknown } | URLSearchParams
 ) => {
     if (params instanceof URLSearchParams) {
@@ -26,12 +25,12 @@ export const linkApi = (
     }
 
     /** @ts-expect-error Generated ziggy config does not match the config interface */
-    const link = routeFn(name, params, false, RouterApi) as string;
+    const link = routeFn(name, params, false, RouterConfigApi) as string;
 
     return ApiUrl + link;
 };
 
-export type RouteName = keyof typeof RouterFront.routes;
+export type RouteName = keyof typeof RouterConfigFront.routes;
 
 export const link = (
     name: RouteName,
@@ -44,7 +43,7 @@ export const link = (
 
     // try {
     /** @ts-expect-error Generated ziggy config does not match the config interface */
-    let link = routeFn(name, params, false, RouterFront) as string;
+    let link = routeFn(name, params, false, RouterConfigFront) as string;
 
     link = `/${link}`.replace(/^\/{2,}/, "/");
 
@@ -77,7 +76,7 @@ export const permalink = (
         "front.page.permalink",
         params,
         false,
-        RouterFront
+        RouterConfigFront
     ) as string;
 
     link = `/${link}`.replace(/^\/{2,}/, "/");
@@ -114,23 +113,25 @@ export type Routes = Route[];
 export const getRoutes = () => {
     const _routes = Object.entries(
         /** @ts-expect-error Generated ziggy config does not match the config interface */
-        routeFn(undefined, undefined, undefined, RouterFront) as Router
+        routeFn(undefined, undefined, undefined, RouterConfigFront) as Router
     )[0]?.[1]?.routes;
 
     const routes: Routes = [];
 
-    Object.entries(_routes).forEach((route) => {
-        const routeData = route[1] as Route["data"];
-        const pattern = new URLPattern({
-            pathname: routeData.pattern,
-        });
+    if (_routes) {
+        Object.entries(_routes).forEach((route) => {
+            const routeData = route[1] as Route["data"];
+            const pattern = new URLPattern({
+                pathname: routeData.pattern,
+            });
 
-        routes.push({
-            name: route[0] as RouteName,
-            data: routeData,
-            pattern,
+            routes.push({
+                name: route[0] as RouteName,
+                data: routeData,
+                pattern,
+            });
         });
-    });
+    }
 
     return routes;
 };
@@ -145,7 +146,7 @@ export const routeExists = (name: string) => {
     return !!routes.find((route) => route.name === name);
 };
 
-export const getCurrentRoute = (url: string): Route | null => {
+export const getRouteByUrl = (url: string): Route | null => {
     url = url.split("?")[0];
 
     try {

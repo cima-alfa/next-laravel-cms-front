@@ -1,8 +1,8 @@
 "use server";
 
-import { linkApi } from "@/lib/router/router";
-import { fetchApi } from "@/lib/utils/server";
-import { simulateDelay } from "@/lib/utils/server";
+import { linkApi } from "@cms/router";
+import { apiData } from "@cms/fetch";
+import { simulateDelay } from "@cms/fetch";
 
 export type User = {
     id: string;
@@ -66,7 +66,7 @@ export type Sessions = {
 } | null;
 
 export const fetchAuthenticated = async (): Promise<boolean> => {
-    return await fetchApi(linkApi("api.users.is-authenticated"), {
+    return await apiData(linkApi("api.users.is-authenticated"), {
         method: "HEAD",
     }).then((response) => response.ok);
 };
@@ -76,7 +76,7 @@ export const fetchUser = async (user?: string): Promise<User | null> => {
         ? linkApi("api.users.get", { user })
         : linkApi("api.users.authenticated");
 
-    return await fetchApi(link).then(async (response) => {
+    return await apiData(link).then(async (response) => {
         return (await response.json())?.data ?? null;
     });
 };
@@ -86,7 +86,7 @@ export const fetchUserSessions = async (user?: string): Promise<Sessions> => {
         ? linkApi("api.users.sessions.get", { user })
         : linkApi("api.users.sessions.index");
 
-    return await fetchApi(link).then(async (response) => {
+    return await apiData(link).then(async (response) => {
         return (await response.json()) ?? null;
     });
 };
@@ -98,7 +98,7 @@ export const fetchUsers = async (page = "1"): Promise<Users> => {
         "page[number]": page,
     };
 
-    return await fetchApi(linkApi("api.users.index", params)).then(
+    return await apiData(linkApi("api.users.index", params)).then(
         async (response) => {
             return (await response.json()) ?? null;
         }

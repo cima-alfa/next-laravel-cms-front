@@ -2,14 +2,14 @@
 
 import { hasMiddleware } from "@/lib/middleware";
 import {
-    getCurrentRoute,
+    getRouteByUrl,
     link,
     linkApi,
     routeExists,
     RouteName,
-} from "@/lib/router/router";
+} from "@cms/router";
 import { setCookies } from "@/lib/utils/cookies";
-import { fetchApi } from "@/lib/utils/server";
+import { apiAction } from "@cms/fetch";
 import { redirect, RedirectType } from "next/navigation";
 
 export type AuthState = {
@@ -18,7 +18,7 @@ export type AuthState = {
 } | null;
 
 export const logout = async (pathname?: string) => {
-    await fetchApi(linkApi("logout"), { method: "POST" }, true).then(
+    await apiAction(linkApi("logout"), { method: "POST" }).then(
         async (response) => {
             if (!response.ok) {
                 return;
@@ -27,7 +27,7 @@ export const logout = async (pathname?: string) => {
             await setCookies(response.headers.getSetCookie());
 
             if (pathname !== undefined) {
-                const currentRoute = getCurrentRoute(pathname);
+                const currentRoute = getRouteByUrl(pathname);
 
                 if (hasMiddleware(currentRoute, "front:auth")) {
                     redirect(link("front.login"), RedirectType.replace);
@@ -48,22 +48,20 @@ export const login = async (prevState: AuthState, formData: FormData) => {
         body: JSON.stringify(data),
     };
 
-    return fetchApi(linkApi("login.store"), options, true).then(
-        async (response) => {
-            if (!response.ok) {
-                const data = await response.json();
+    return apiAction(linkApi("login.store"), options).then(async (response) => {
+        if (!response.ok) {
+            const data = await response.json();
 
-                return {
-                    message: data.message,
-                    errors: data.errors,
-                };
-            }
-
-            await setCookies(response.headers.getSetCookie());
-
-            redirect(link("front.cp.dashboard.index"), RedirectType.replace);
+            return {
+                message: data.message,
+                errors: data.errors,
+            };
         }
-    );
+
+        await setCookies(response.headers.getSetCookie());
+
+        redirect(link("front.cp.dashboard.index"), RedirectType.replace);
+    });
 };
 
 export const register = async (
@@ -84,10 +82,9 @@ export const register = async (
         body: JSON.stringify(data),
     };
 
-    return fetchApi(
+    return apiAction(
         linkApi("register.store", { expires, signature }),
-        options,
-        true
+        options
     ).then(async (response) => {
         if (!response.ok) {
             const data = await response.json();
@@ -120,7 +117,7 @@ export const invite = async (prevState: AuthState, formData: FormData) => {
         body: JSON.stringify(data),
     };
 
-    return fetchApi(linkApi("api.users.invite"), options, true).then(
+    return apiAction(linkApi("api.users.invite"), options).then(
         async (response) => {
             if (!response.ok) {
                 const data = await response.json();

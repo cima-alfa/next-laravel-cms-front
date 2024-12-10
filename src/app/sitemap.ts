@@ -1,5 +1,5 @@
 import { fetchSitemap } from "@/lib/data/pages";
-import { permalink } from "@/lib/router/router";
+import { permalink } from "@cms/router";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -8,11 +8,8 @@ import { ChangeEvent, FocusEvent } from "@/back-ui/components/forms";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
 import { updateUser, updateUserPassword } from "@/lib/actions/users";
 import { User } from "@/lib/data/users";
-import {
-    formatPhoneCountryCode,
-    formatPhoneNumber,
-} from "@/lib/utils/helpers/strings";
-import { getDisplayNameOptions } from "@/lib/utils/helpers/users";
+import { formatPhoneCountryCode, formatPhoneNumber } from "@cms/helpers";
+import { getDisplayNameOptions } from "@cms/helpers";
 import Form from "next/form";
 import { useActionState, useId, useState } from "react";
 import ButtonBase from "@/back-ui/components/ButtonBase";

@@ -1,6 +1,6 @@
 "use client";
 
-import { getCurrentRoute, link, RouteName } from "@/lib/router/router";
+import { getRouteByUrl, link, RouteName } from "@cms/router";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -18,7 +18,7 @@ export default function PrimaryNavigationLink({
     ...rest
 }: Readonly<Props>) {
     const pathname = usePathname();
-    const currentRoute = getCurrentRoute(pathname);
+    const currentRoute = getRouteByUrl(pathname);
     const isCurrent = currentRoute?.name === route ? true : undefined;
     const href = link(route);
 

@@ -1,8 +1,8 @@
 "use server";
 
-import { link, linkApi } from "@/lib/router/router";
+import { link, linkApi } from "@cms/router";
 import { formDataToJson } from "@/lib/utils";
-import { fetchApi } from "@/lib/utils/server";
+import { apiAction } from "@cms/fetch";
 import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 
@@ -12,7 +12,7 @@ import { redirect, RedirectType } from "next/navigation";
 //         body: toJson(formData, "title", "text"),
 //     };
 
-//     return fetchApi(linkApi("register.store"), options, true).then(
+//     return apiAction(linkApi("register.store"), options).then(
 //         async (response) => {
 //             const data = await response.json();
 
@@ -80,21 +80,19 @@ export const updateUser = async (
         body: formDataToJson(formData, "update_user", ...fields),
     };
 
-    return fetchApi(
-        linkApi("user-profile-information.update"),
-        options,
-        true
-    ).then(async (response) => {
-        if (!response.ok) {
-            const data = await response.json();
+    return apiAction(linkApi("user-profile-information.update"), options).then(
+        async (response) => {
+            if (!response.ok) {
+                const data = await response.json();
 
-            return {
-                errors: data.errors,
-            };
+                return {
+                    errors: data.errors,
+                };
+            }
+
+            return { message: "Successfully updated" };
         }
-
-        return { message: "Successfully updated" };
-    });
+    );
 };
 
 export const updateUserPassword = async (
@@ -111,7 +109,7 @@ export const updateUserPassword = async (
         ),
     };
 
-    return fetchApi(linkApi("user-password.update"), options, true).then(
+    return apiAction(linkApi("user-password.update"), options).then(
         async (response) => {
             if (!response.ok) {
                 const data = await response.json();
@@ -131,7 +129,7 @@ export const destroyUser = async (user: string, redirectLink?: string) => {
         method: "DELETE",
     };
 
-    return fetchApi(linkApi("api.users.destroy", { user }), options, true).then(
+    return apiAction(linkApi("api.users.destroy", { user }), options).then(
         async (response) => {
             const data = await response.json();
 

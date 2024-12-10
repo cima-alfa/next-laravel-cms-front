@@ -2,7 +2,7 @@ import PanelBase from "@/back-ui/components/layout/PanelBase";
 import PagesIndex from "@/back-ui/components/app/pages/PagesIndex";
 import PaginationLinks from "@/back-ui/components/PaginationLinks";
 import { fetchPages } from "@/lib/data/pages";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 
 interface Props {
     searchParams: Promise<{ page?: string }>;

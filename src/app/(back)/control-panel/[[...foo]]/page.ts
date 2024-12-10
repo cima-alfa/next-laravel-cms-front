@@ -1,4 +1,4 @@
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 import { redirect } from "next/navigation";
 
 export default function Page() {

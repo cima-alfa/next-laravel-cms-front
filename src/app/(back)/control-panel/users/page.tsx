@@ -3,7 +3,7 @@ import PaginationLinks from "@/back-ui/components/PaginationLinks";
 import UserInvite from "@/back-ui/components/app/users/UserInvite";
 import UsersIndex from "@/back-ui/components/app/users/UsersIndex";
 import { fetchUser, fetchUsers, User } from "@/lib/data/users";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 
 export default async function Page({
     searchParams,

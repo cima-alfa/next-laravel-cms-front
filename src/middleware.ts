@@ -4,7 +4,7 @@ import { guestMiddleware } from "@/lib/middleware/guestMiddleware";
 import { permalinkFrontpageMiddleware } from "@/lib/middleware/permalinkFrontpageMiddleware";
 import { rolesMiddleware } from "@/lib/middleware/rolesMiddleware";
 import { setHeadersMiddleware } from "@/lib/middleware/setHeadersMiddleware";
-import { getCurrentRoute } from "@/lib/router/router";
+import { getRouteByUrl } from "@cms/router";
 import { type NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 const middlewareChain = [
@@ -20,7 +20,7 @@ const middleware = (
     event: NextFetchEvent,
     response: NextResponse
 ) =>
-    chain(getCurrentRoute(request.url), middlewareChain)(
+    chain(getRouteByUrl(request.url), middlewareChain)(
         request,
         event,
         response

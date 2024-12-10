@@ -1,5 +1,5 @@
 import "@/front-ui/assets/globals.css";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 
 import LayoutWrapper from "@/front-ui/components/layout/LayoutWrapper";
 import LayoutHeader from "@/front-ui/components/layout/layout-header/LayoutHeader";

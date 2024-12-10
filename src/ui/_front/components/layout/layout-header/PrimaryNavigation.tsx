@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 import { fetchAuthenticated } from "@/lib/data/users";
 
 export default async function PrimaryNavigation({
@@ -30,17 +30,32 @@ export default async function PrimaryNavigation({
                         "
                 >
                     <li>
-                        <PrimaryNavigationLink href="/" title="">
+                        <PrimaryNavigationLink
+                            href={link("front.page.permalink", {
+                                permalink: "welcome",
+                            })}
+                            title="Welcome"
+                        >
                             Home
                         </PrimaryNavigationLink>
                     </li>
                     <li>
-                        <PrimaryNavigationLink href="/about" title="">
+                        <PrimaryNavigationLink
+                            href={link("front.page.permalink", {
+                                permalink: "about",
+                            })}
+                            title="Find out who we are"
+                        >
                             About
                         </PrimaryNavigationLink>
                     </li>
                     <li>
-                        <PrimaryNavigationLink href="/contact" title="">
+                        <PrimaryNavigationLink
+                            href={link("front.page.permalink", {
+                                permalink: "contact",
+                            })}
+                            title="Reach us here"
+                        >
                             Contact
                         </PrimaryNavigationLink>
                     </li>
@@ -49,7 +64,7 @@ export default async function PrimaryNavigation({
                             <li>
                                 <PrimaryNavigationLink
                                     href={link("front.login")}
-                                    title=""
+                                    title="Sign in to your account"
                                 >
                                     Login
                                 </PrimaryNavigationLink>

@@ -1,6 +1,6 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { fetchUser } from "@/lib/data/users";
-import { Route, link } from "@/lib/router/router";
+import { Route, link } from "@cms/router";
 import { CustomMiddleware, redirect } from "@/lib/middleware";
 import { hasMiddleware } from "@/lib/middleware";
 

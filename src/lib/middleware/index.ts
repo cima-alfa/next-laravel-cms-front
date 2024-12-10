@@ -1,6 +1,6 @@
 import { type NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { NextMiddlewareResult } from "next/dist/server/web/types";
-import { Route } from "@/lib/router/router";
+import { Route } from "@cms/router";
 
 export type CustomMiddleware = (
     request: NextRequest,

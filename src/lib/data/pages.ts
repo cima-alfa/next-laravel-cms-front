@@ -1,9 +1,9 @@
 "use server";
 
 import { User } from "@/lib/data/users";
-import { linkApi } from "@/lib/router/router";
-import { fetchApi } from "@/lib/utils/server";
-import { simulateDelay } from "@/lib/utils/server";
+import { linkApi } from "@cms/router";
+import { apiData } from "@cms/fetch";
+import { simulateDelay } from "@cms/fetch";
 
 export type Page = {
     id: string;
@@ -71,7 +71,7 @@ export const fetchPages = async (
         params.include = "user";
     }
 
-    return await fetchApi(linkApi("api.pages.index", params)).then(
+    return await apiData(linkApi("api.pages.index", params)).then(
         async (response) => {
             return (await response.json()) ?? null;
         }
@@ -79,7 +79,7 @@ export const fetchPages = async (
 };
 
 export const fetchPageById = async (id: string): Promise<Page | null> => {
-    return await fetchApi(linkApi("api.pages.get", { id })).then(
+    return await apiData(linkApi("api.pages.get", { id })).then(
         async (response) => {
             return (await response.json())?.data ?? null;
         }
@@ -89,7 +89,7 @@ export const fetchPageById = async (id: string): Promise<Page | null> => {
 export const fetchPageByPermalink = async (
     page: string | null
 ): Promise<Page | null> => {
-    return await fetchApi(linkApi("api.pages.permalink", { page })).then(
+    return await apiData(linkApi("api.pages.permalink", { page })).then(
         async (response) => {
             const result = await response.json();
 
@@ -99,7 +99,7 @@ export const fetchPageByPermalink = async (
 };
 
 export const fetchSitemap = async (): Promise<Pages> => {
-    return await fetchApi(linkApi("api.pages.sitemap")).then(
+    return await apiData(linkApi("api.pages.sitemap")).then(
         async (response) => {
             return (await response.json()) ?? null;
         }

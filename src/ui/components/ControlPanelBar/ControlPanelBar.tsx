@@ -2,7 +2,7 @@
 
 import { logout } from "@/lib/actions/auth";
 import { fetchUser, User } from "@/lib/data/users";
-import { link } from "@/lib/router/router";
+import { link } from "@cms/router";
 import ExpandButton from "@/ui/components/ExpandButton";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
