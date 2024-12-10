@@ -18,7 +18,7 @@
 
 ### App Router
 
-The public area pages can be found in `src/app/(front)`. By default, the authentication basic page UI is provided.
+The frontend / public area can be found in `src/app/(front)`.
 
 The backend / control panel can be found in `src/app/(back)`.
 
