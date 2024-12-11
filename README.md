@@ -7,6 +7,8 @@ Password: admin
 
 ## Developer Docs:
 
+### Installation
+
 -   Read the Next.js 15 docs to see what is required for development ([Next.js Docs](https://nextjs.org/docs))
 -   Install the API CMS repository - [Repo Here](https://github.com/cima-alfa/next-laravel-cms-api)
     -   For now, both repositories must be installed in the same directory
@@ -20,6 +22,8 @@ Password: admin
     -   Run `pnpm install` or `npm install`
     -   Run `pnpm dev` or `npm run dev`
 -   Default hosts for frontend and api are `localhost:3000` and `localhost:8000` respectively
+
+---
 
 ### App Router
 
@@ -51,7 +55,9 @@ Favicons must be included in the `src/app` directory. For more information, chec
 
 The following multidimensional object helpers are available:
 
--   ##### `setObject(object: object, path: string, value: unknown)`
+-   ##### `type Object = { [key: string]: unknown }`
+
+-   ##### `setObject(object: Object, path: string, value: unknown): Object`
 
     Allows to set a mutidimensional element in the provided object usin the dot notation.
 
@@ -59,9 +65,7 @@ The following multidimensional object helpers are available:
 
     `{ foo: { bar: "Hello there!" } }`
 
-&nbsp;
-
--   ##### `findInObject(object: object, path: string)`
+-   ##### `findInObject(object: Object, path: string): unknown`
 
     Allows to find a mutidimensional element in the provided object usin the dot notation.
 
@@ -69,9 +73,49 @@ The following multidimensional object helpers are available:
 
     If the path is incorrect, `undefined` is returned.
 
+-   ##### `formDataToObject(formData: FormData, ...fields: string[]): Object`
+
+    Converts `FormData` fields to a simple object. For multidimensional fiels, use the dot notation instead of the stardard array notation.
+
+    ```
+    field[items][item1] - incorrect
+
+    field.items.item1 - correct
+    ```
+
+    If you need an equivalent to `field[]`, you can use `field.*`. However, only 1 star is supported.
+
+    ```
+    field.*
+    field.*
+    field.*
+
+    Will result in:
+
+    field.0
+    field.1
+    field.2
+    ```
+
+    Deeper levels can be chained afterwards: `field.*.item`.
+
+    Accepts the `FormData` object as the first argument and an enumeration of fields that should be included in the returned object.
+
+-   ##### `formDataToJson(formData: FormData, ...fields: string[]): string`
+
+    Same as the `formDataToObject`, except it returns a `JSON` string of the object.
+
+#### Sleep (`@cms/helpers`)
+
+-   ##### `async sleep(seconds: number): Promise<void>`
+
+    Allows to add a delay in seconds before continuing the code execution.
+
 #### UI Hooks (`@cms/hooks`)
 
--   ##### `useWindowSize()`
+-   ##### `type WindowSize = { width: number | undefined; height: number | undefined; }`;
+
+-   ##### `useWindowSize(): WindowSize`
 
     Returns the inner window size. Values are updated on resize.
 
@@ -82,11 +126,39 @@ The following multidimensional object helpers are available:
     }
     ```
 
--   ##### `useSetSourceMedia(...pictures: React.RefObject<HTMLPictureElement | null>[])`
+-   ##### `useSetSourceMedia(...pictures: React.RefObject<HTMLPictureElement | null>[]): void`
 
     Accepts React Refs of `<picture />` elements that contain images that should change depending on the current theme (dark or light).
 
     Automatically changes the image if the theme is manually toggled.
+
+#### Events (`@cms/events`)
+
+-   ##### `type EventTarget = Element | Document | Window`
+
+-   ##### `type EventListener = EventListenerOrEventListenerObject`
+
+-   ##### `type EventOptions = boolean | AddEventListenerOptions`
+
+-   ##### `eventListener.add(target: EventTarget, event: string, listener: EventListener, options?: EventOptions): void`
+
+    Add an event listener to a target. Supports named (jQuery style) events: `click.primary-button`. This makes managing multiple events of the same type on one element easier.
+
+    First argument is the target, rest are the same as the default `addEventListener` method ([MDN Docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)).
+
+    ```
+    const options = ...;
+
+    eventListener.add(element, 'click.myClickEvent', (e) => alert(e.type), options);
+    ```
+
+-   ##### `eventListener.remove(target: EventTarget, event: string): void`
+
+    Remove an event listener from a target by named event.
+
+    ```
+    eventListener.remove(element, 'click.myClickEvent');
+    ```
 
 ---
 
@@ -96,7 +168,9 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
 
 #### Links
 
--   ##### `link(name: RouteName, params?: { [key: string]: unknown } | URLSearchParams, absolute = false)`
+-   ##### `type LinkParams = { [key: string]: unknown } | URLSearchParams`
+
+-   ##### `link(name: RouteName, params?: LinkParams, absolute = false): string`
 
     Generates a front url (relative by default) from a route name. The route names are defined in the `RouteName` type.
 
@@ -106,15 +180,15 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
 
     For example, the link for the route `/users/{userId}` with `{ userId: 'random-id', only: 'first-name' }` params would look like this: `/users/random-id?only=first-name`
 
--   ##### `permalink(page: Page, params?: { [key: string]: unknown } | URLSearchParams, absolute = false)`
+-   ##### `permalink(page: Page, params?: LinkParams, absolute = false): string`
 
     Helper to generate a page permalink (relative by default). Works the same as the `link` function, but instead of a route name, it accepts a `Page` object.
 
--   ##### `linkApi(name: RouteName, params?: { [key: string]: unknown } | URLSearchParams)`
+-   ##### `linkApi(name: RouteName, params?: LinkParams): string`
 
     Same as `link` except it generates API URLs, always absolute.
 
--   ##### `searchParamsToObject(searchParams: URLSearchParams)`
+-   ##### `searchParamsToObject(searchParams: URLSearchParams): { [key: string]: unknown }`
 
     Helper to convert `URLSearchParams` to a simple object.
 
@@ -141,23 +215,23 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
     }
     ```
 
--   ##### `getRoutes()`
+-   ##### `getRoutes(): Route[]`
 
-    Gets all front routes. Returns `Route[]`.
+    Gets all front routes.
 
     This can also be accessed from the exported `routes` constant.
 
--   ##### `getRoute(name: RouteName)`
+-   ##### `getRoute(name: RouteName): Route`
 
-    Gets a front route by name. Returns `Route`.
+    Gets a front route by name.
 
--   ##### `routeExists(name: string)`
+-   ##### `routeExists(name: string): boolean`
 
-    Checks if a front route exists by name and returns `bool`.
+    Checks if a front route exists by name.
 
--   ##### `getRouteByUrl(url: string)`
+-   ##### `getRouteByUrl(url: string): Route | null`
 
-    Gets a front route from a url string (can be relative or absolute). Returns `Route | null`.
+    Gets a front route from a url string (can be relative or absolute).
 
 ---
 
@@ -171,31 +245,53 @@ Because it's a server to server communication (the Next.js server acts as a prox
 
 In any server action you can call an async function to simulate a longer response time of a fetch. By default it will only run in development mode. You can force it globally by setting the `SIMULATE_FETCH_DELAY` env variable to `true`. Or disable it completely by setting it to `false`.
 
--   ##### `async simulateDelay(seconds: number, force = false)`
+-   ##### `async simulateDelay(seconds: number, force = false): Promise<void>`
 
     Accepts a number of seconds the delay should last. You can also individually force the delay in production by setting the `force` argument to `true`.
 
 #### Headers
 
--   ##### `async defaultHeaders(freshCookies: boolean)`
+-   ##### `async defaultHeaders(freshCookies: boolean): Promise<HeadersInit>`
 
     Returns a `HeadersInit` object with all the necessary default headers for fetching the API. \
     Accepts a `freshCookies` `boolean` parameter to refresh the cookies used in the fetch request, including the `XSRF` token.
 
 #### Fetch
 
--   ##### `async fetchCsrf()`
+-   ##### `async fetchCsrf(): Promise<Response>`
 
     Fetches a fresh `XSRF` token from the API.
 
--   ##### `async fetchApi(url: string, init?: RequestInit, freshCookies = false)`
+-   ##### `async fetchApi(url: string, init?: RequestInit, freshCookies = false): Promise<Response>`
 
     Fetches a specific API endpoint. Automatically includes default headers and cookies. Additional request configuration can be included by passing a `RequestInit` object to the `init` parameter. To refresh the cookies before the request, set the `freshCookies` parameter to `true`.
 
--   ##### `async apiData(url: string, init?: RequestInit)`
+-   ##### `async apiData(url: string, init?: RequestInit): Promise<Response>`
 
     Helper `fetchApi` function to get API data. Does not refresh cookies. Default method is `GET`.
 
--   ##### `async apiAction(url: string, init?: RequestInit)`
+-   ##### `async apiAction(url: string, init?: RequestInit): Promise<Response>`
 
     Helper `fetchApi` function to perform an API action. Refreshes cookies. Default method is `POST`.
+
+---
+
+### Cookies (`@cms/cookies`)
+
+#### Get Cookies
+
+-   ##### `async getCookieStore(): Promise<ReadonlyRequestCookies>`
+
+    Returns the Next.js Cookie Store. ([Next.js Cookies Docs](https://nextjs.org/docs/app/api-reference/functions/cookies))
+
+-   ##### `async getCookie(name: string): Promise<RequestCookie>`
+
+    Returns a specific cookie by name from the Next.js Cookie Store.
+
+-   ##### `async getCookies(): Promise<RequestCookie[]>`
+
+    Returns an array of all cookies, in the format of the Next.js `RequestCookie` object.
+
+-   ##### `async getCookies(...names: string[]): Promise<(RequestCookie | undefined)[]>`
+
+    Returns an array of specific cookies by their names, in the format of the Next.js `RequestCookie` object or `undefined` if the cookie does not exist.
