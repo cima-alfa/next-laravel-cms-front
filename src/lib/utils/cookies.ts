@@ -11,7 +11,7 @@ export async function getCookies(): Promise<RequestCookie[]>;
 
 export async function getCookies(
     ...names: string[]
-): Promise<{ [key: string]: RequestCookie | undefined }>;
+): Promise<(RequestCookie | undefined)[]>;
 
 export async function getCookies(...names: string[]) {
     const cookieStore = await cookies();
@@ -20,12 +20,12 @@ export async function getCookies(...names: string[]) {
         return cookieStore.getAll();
     }
 
-    const _cookies: { [key: string]: RequestCookie | undefined } = {};
+    const _cookies: (RequestCookie | undefined)[] = [];
 
     for (let index = 0; index < names.length; index++) {
         const name = names[index];
 
-        _cookies[name] = cookieStore.get(name);
+        _cookies.push(cookieStore.get(name));
     }
 
     return _cookies;
@@ -54,7 +54,9 @@ export const getCookieStore = async () => await cookies();
 export const setCookie = async (cookie: string, response?: NextResponse) => {
     const cookieStore = response?.cookies ?? (await cookies());
 
-    const cookieData = `${cookie};`.matchAll(/\s*(.+?)\s*(?:=\s*(.+?))?\s*;/g);
+    const cookieData = `${cookie.replace(/;+$/g, "")};`.matchAll(
+        /\s*(.+?)\s*(?:=\s*(.+?))?\s*;/g
+    );
 
     const cookieNameValue = cookieData.next();
 
