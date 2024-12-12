@@ -1,13 +1,17 @@
 import "client-only";
 
+export type EventTarget = Element | Document | Window;
+export type EventListener = EventListenerOrEventListenerObject;
+export type EventOptions = boolean | AddEventListenerOptions;
+
 const targetMap = new Map();
 
 const eventListener = {
     add: (
-        target: Element | Document | Window,
+        target: EventTarget,
         event: string,
-        listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
+        listener: EventListener,
+        options?: EventOptions
     ) => {
         const listenerMap = targetMap.get(target) ?? {};
 
@@ -22,7 +26,7 @@ const eventListener = {
         target.addEventListener(event.split(".")[0], listener, options);
     },
 
-    remove: (target: Element | Document | Window, event: string) => {
+    remove: (target: EventTarget, event: string) => {
         const listenerMap = targetMap.get(target);
 
         if (listenerMap !== undefined && listenerMap[event] !== undefined) {
