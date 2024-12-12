@@ -2,10 +2,10 @@
 
 import "server-only";
 import { FrontUrl, linkApi } from "@cms/router";
-import { getCookie, getCookieString, setCookie } from "@/lib/utils/cookies";
+import { getCookie, getCookieString, setCookie } from "@cms/cookies";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@cms/helpers";
 
 export const simulateDelay = async (seconds: number, force = false) => {
     const status =
