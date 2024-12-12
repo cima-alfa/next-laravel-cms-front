@@ -16,9 +16,11 @@ export const searchParamsToObject = (searchParams: URLSearchParams) => {
     return params;
 };
 
+export type LinkParams = { [key: string]: unknown } | URLSearchParams;
+
 export const linkApi = (
     name: keyof typeof RouterConfigApi.routes,
-    params?: { [key: string]: unknown } | URLSearchParams
+    params?: LinkParams
 ) => {
     if (params instanceof URLSearchParams) {
         params = searchParamsToObject(params);
@@ -34,7 +36,7 @@ export type RouteName = keyof typeof RouterConfigFront.routes;
 
 export const link = (
     name: RouteName,
-    params?: { [key: string]: unknown } | URLSearchParams,
+    params?: LinkParams,
     absolute = false
 ) => {
     if (params instanceof URLSearchParams) {
@@ -59,7 +61,7 @@ export const link = (
 
 export const permalink = (
     page: Page,
-    params?: { [key: string]: unknown } | URLSearchParams,
+    params?: LinkParams,
     absolute = false
 ) => {
     if (params instanceof URLSearchParams) {
@@ -108,15 +110,13 @@ export type Route = {
     segments?: RouteSegments;
 };
 
-export type Routes = Route[];
-
 export const getRoutes = () => {
     const _routes = Object.entries(
         /** @ts-expect-error Generated ziggy config does not match the config interface */
         routeFn(undefined, undefined, undefined, RouterConfigFront) as Router
     )[0]?.[1]?.routes;
 
-    const routes: Routes = [];
+    const routes: Route[] = [];
 
     if (_routes) {
         Object.entries(_routes).forEach((route) => {
