@@ -80,7 +80,8 @@ export default function EmailsSettingsForm({
                 <InputSelect
                     label="Method"
                     name="mail.mailers.default.transport"
-                    value={formState["mail.mailers.default.transport"]}
+                    key={formState["mail.mailers.default.transport"]}
+                    defaultValue={formState["mail.mailers.default.transport"]}
                     state={state}
                     onChange={(e) => handleInput(e, formState, setFormState)}
                 >
@@ -115,7 +116,10 @@ export default function EmailsSettingsForm({
                         <InputSelect
                             label="Security"
                             name="mail.mailers.default.encryption"
-                            value={formState["mail.mailers.default.encryption"]}
+                            key={formState["mail.mailers.default.encryption"]}
+                            defaultValue={
+                                formState["mail.mailers.default.encryption"]
+                            }
                             state={state}
                             onChange={(e) =>
                                 handleInput(e, formState, setFormState)

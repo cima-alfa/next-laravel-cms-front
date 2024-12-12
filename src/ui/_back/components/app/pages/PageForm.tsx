@@ -11,7 +11,7 @@ import {
 } from "@/lib/actions/pages";
 import { Page } from "@/lib/data/pages";
 import Form from "next/form";
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import ButtonBase from "@/back-ui/components/ButtonBase";
 import { useRouter } from "nextjs-toploader/app";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
@@ -268,14 +268,6 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
             .trim();
     };
 
-    useEffect(() => {
-        setFormStateMetadata(initialStateMetadata);
-    }, [initialStateMetadata]);
-
-    useEffect(() => {
-        setFormStateContent(initialStateContent);
-    }, [initialStateContent]);
-
     return (
         <div className="grid @8xl/main:grid-cols-[3fr_1fr] gap-4 items-start">
             <div className="grid gap-2">
@@ -511,7 +503,8 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
                     <InputSelect
                         label="Robots"
                         name="robots"
-                        value={formStateMetadata.robots as string}
+                        key={formStateMetadata.robots as string}
+                        defaultValue={formStateMetadata.robots as string}
                         state={stateMetadata}
                         onChange={(e) =>
                             handleInput(
@@ -533,7 +526,10 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
                     <InputSelect
                         label="Include in Sitemap"
                         name="sitemap_include"
-                        value={formStateMetadata.sitemap_include as string}
+                        key={formStateMetadata.sitemap_include as string}
+                        defaultValue={
+                            formStateMetadata.sitemap_include as string
+                        }
                         state={stateMetadata}
                         onChange={(e) =>
                             handleInput(
@@ -551,7 +547,8 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
                     <InputSelect
                         label="Priority"
                         name="sitemap_prio"
-                        value={formStateMetadata.sitemap_prio as string}
+                        key={formStateMetadata.sitemap_prio as string}
+                        defaultValue={formStateMetadata.sitemap_prio as string}
                         state={stateMetadata}
                         onChange={(e) =>
                             handleInput(
@@ -578,7 +575,10 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
                     <InputSelect
                         label="Change Frequency"
                         name="sitemap_change_freq"
-                        value={formStateMetadata.sitemap_change_freq as string}
+                        key={formStateMetadata.sitemap_change_freq as string}
+                        defaultValue={
+                            formStateMetadata.sitemap_change_freq as string
+                        }
                         state={stateMetadata}
                         onChange={(e) =>
                             handleInput(

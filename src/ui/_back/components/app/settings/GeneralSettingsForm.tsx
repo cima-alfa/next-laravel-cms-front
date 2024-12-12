@@ -77,7 +77,8 @@ export default function GeneralSettingsForm({
                 <InputSelect
                     label="Front Page"
                     name="general.frontpage"
-                    value={formState["general.frontpage"]}
+                    key={formState["general.frontpage"]}
+                    defaultValue={formState["general.frontpage"]}
                     state={state}
                     onChange={(e) => handleInput(e, formState, setFormState)}
                 >
