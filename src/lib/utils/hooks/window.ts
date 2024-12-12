@@ -1,11 +1,13 @@
 import "client-only";
 import { useEffect, useState } from "react";
 
+export type WindowSize = {
+    width: number | undefined;
+    height: number | undefined;
+};
+
 export const useWindowSize = () => {
-    const [windowSize, setWindowSize] = useState<{
-        width: number | undefined;
-        height: number | undefined;
-    }>({
+    const [windowSize, setWindowSize] = useState<WindowSize>({
         width: undefined,
         height: undefined,
     });
