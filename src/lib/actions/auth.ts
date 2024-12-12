@@ -1,6 +1,6 @@
 "use server";
 
-import { hasMiddleware } from "@/lib/middleware";
+import { hasMiddleware } from "@cms/middleware";
 import {
     getRouteByUrl,
     link,
@@ -8,7 +8,7 @@ import {
     routeExists,
     RouteName,
 } from "@cms/router";
-import { setCookies } from "@/lib/utils/cookies";
+import { setCookies } from "@cms/cookies";
 import { apiAction } from "@cms/fetch";
 import { redirect, RedirectType } from "next/navigation";
 
