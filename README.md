@@ -295,3 +295,30 @@ In any server action you can call an async function to simulate a longer respons
 -   ##### `async getCookies(...names: string[]): Promise<(RequestCookie | undefined)[]>`
 
     Returns an array of specific cookies by their names, in the format of the Next.js `RequestCookie` object or `undefined` if the cookie does not exist.
+
+-   ##### `async getCookieString(): Promise<string>`
+
+    Returns a properly formatted cookie string that can be included in the `Cookies` request header.
+
+#### Set Cookies
+
+-   ##### `async setCookie(cookie: string, response?: NextResponse): Promise<void>`
+
+    Set a single cookie with `key=value;` string notation.
+
+    ```
+    my_cookie=value; expires=Thu, 01 Dec 2024 12:00:00 GMT; Max-Age=7200; path=/; domain=.domain.tld; httponly; samesite=lax
+    ```
+
+    By default, the current request cookie storage is used to set the cookie. Optionally, a `NextResponse` response object can be passed as a second argument. In that case, the response cookie storage will be used instead.
+
+    This is usefull for changing responses in middleware, for example.
+
+-   ##### `async setCookies(cookie: string[], response?: NextResponse): Promise<void>`
+
+    Set multiple cookies at once. First argument accepts an array of cookie strings. \
+    Second argument accepts a `NextResponse` object. Refer to `setCookie` for more info.
+
+---
+
+### Middleware (`@cms/middleware`)
