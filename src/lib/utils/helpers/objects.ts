@@ -1,3 +1,5 @@
+export type Object = { [key: string]: unknown };
+
 /**
  * Add an element into a multidimensional object using the dot notation.
  *
@@ -6,16 +8,16 @@
  * `{ ..., foo: { bar: 'new value' } }`
  */
 export const setObject = (
-    object: { [key: string]: unknown },
+    object: Object,
     path: string,
     value: unknown
-) => {
+): Object => {
     const [current, ...rest] = path.split(".");
 
     object[current] =
         rest.length >= 1
             ? // @ts-expect-error empty object
-              set(object[current] || {}, rest.join("."), value)
+              setObject(object[current] || {}, rest.join("."), value)
             : value;
 
     return object;
@@ -28,10 +30,7 @@ export const setObject = (
  *
  * If path is incorrect, `undefined` is returned.
  */
-export const findInObject = (
-    object: { [key: string]: unknown },
-    path: string
-) => {
+export const findInObject = (object: Object, path: string) => {
     const keys = path.split(".");
 
     let value: unknown = object;
@@ -41,4 +40,26 @@ export const findInObject = (
     });
 
     return value;
+};
+
+export const formDataToObject = (formData: FormData, ...fields: string[]) => {
+    let data: Object = {};
+
+    fields.forEach((field) => {
+        const values = formData.getAll(field);
+
+        for (let index = 0; index < values.length; index++) {
+            data = setObject(
+                data,
+                field.replace("*", index.toString()),
+                values[index].toString()
+            );
+        }
+    });
+
+    return data;
+};
+
+export const formDataToJson = (formData: FormData, ...fields: string[]) => {
+    return JSON.stringify(formDataToObject(formData, ...fields));
 };
