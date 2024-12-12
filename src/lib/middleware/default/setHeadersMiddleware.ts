@@ -1,10 +1,10 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { Route } from "@cms/router";
-import { CustomMiddleware } from "@/lib/middleware";
+import { CustomMiddleware, MiddlewareFactory } from "@cms/middleware";
 import { fetchCsrf } from "@cms/fetch";
-import { setCookies } from "@/lib/utils/cookies";
+import { setCookies } from "@cms/cookies";
 
-export const setHeadersMiddleware = (
+const setHeadersMiddleware: MiddlewareFactory = (
     currentRoute: Route | null,
     middleware: CustomMiddleware
 ): CustomMiddleware => {
@@ -26,3 +26,5 @@ export const setHeadersMiddleware = (
         return middleware(request, event, response);
     };
 };
+
+export default setHeadersMiddleware;

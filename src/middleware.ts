@@ -1,19 +1,21 @@
-import { chain } from "@/lib/middleware";
-import { authMiddleware } from "@/lib/middleware/authMiddleware";
-import { guestMiddleware } from "@/lib/middleware/guestMiddleware";
-import { permalinkFrontpageMiddleware } from "@/lib/middleware/permalinkFrontpageMiddleware";
-import { rolesMiddleware } from "@/lib/middleware/rolesMiddleware";
-import { setHeadersMiddleware } from "@/lib/middleware/setHeadersMiddleware";
 import { getRouteByUrl } from "@cms/router";
 import { type NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { chain, MiddlewareFactory, middlewareChain } from "@cms/middleware";
+import * as middlewareProvider from "@/middlewareProvider";
 
-const middlewareChain = [
-    setHeadersMiddleware,
-    permalinkFrontpageMiddleware,
-    guestMiddleware,
-    authMiddleware,
-    rolesMiddleware,
-];
+middlewareProvider.middlewareChain.map((middleware) => {
+    const middlewareFn = middlewareProvider[
+        middleware as keyof typeof middlewareProvider
+    ] as unknown as MiddlewareFactory | undefined;
+
+    if (middlewareFn !== undefined) {
+        middlewareChain.push(middlewareFn);
+    } else {
+        console.error(
+            `Middleware '${middleware}', defined in the middleware provider 'order', does not exist!`
+        );
+    }
+});
 
 const middleware = (
     request: NextRequest,
@@ -29,5 +31,7 @@ const middleware = (
 export default middleware;
 
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images).*)"],
+    matcher: [
+        "/((?!api|_next/static|_next/image|images|favicon.ico|favicon.svg|icon.ico|icon.svg|sitemap.xml|robots.txt).*)",
+    ],
 };

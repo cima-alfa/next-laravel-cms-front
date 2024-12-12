@@ -1,10 +1,14 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { fetchAuthenticated } from "@/lib/data/users";
 import { Route, link } from "@cms/router";
-import { CustomMiddleware, redirect } from "@/lib/middleware";
-import { hasMiddleware } from "@/lib/middleware";
+import {
+    CustomMiddleware,
+    hasMiddleware,
+    MiddlewareFactory,
+    redirect,
+} from "@cms/middleware";
 
-export const authMiddleware = (
+const guestMiddleware: MiddlewareFactory = (
     currentRoute: Route | null,
     middleware: CustomMiddleware
 ): CustomMiddleware => {
@@ -13,14 +17,19 @@ export const authMiddleware = (
         event: NextFetchEvent,
         response: NextResponse
     ) => {
-        if (hasMiddleware(currentRoute, "front:auth")) {
+        if (hasMiddleware(currentRoute, "front:guest")) {
             const authenticated = await fetchAuthenticated();
 
-            if (!authenticated) {
-                return redirect(request, link("front.login", {}, true));
+            if (authenticated) {
+                return redirect(
+                    request,
+                    link("front.cp.dashboard.index", {}, true)
+                );
             }
         }
 
         return middleware(request, event, response);
     };
 };
+
+export default guestMiddleware;

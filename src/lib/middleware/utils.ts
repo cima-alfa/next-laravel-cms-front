@@ -8,7 +8,7 @@ export type CustomMiddleware = (
     response: NextResponse
 ) => NextMiddlewareResult | Promise<NextMiddlewareResult>;
 
-type MiddlewareFactory = (
+export type MiddlewareFactory = (
     currentRoute: Route | null,
     middleware: CustomMiddleware
 ) => CustomMiddleware;

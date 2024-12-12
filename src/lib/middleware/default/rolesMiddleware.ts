@@ -1,10 +1,14 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { fetchUser } from "@/lib/data/users";
 import { Route, link } from "@cms/router";
-import { CustomMiddleware, redirect } from "@/lib/middleware";
-import { hasMiddleware } from "@/lib/middleware";
+import {
+    CustomMiddleware,
+    hasMiddleware,
+    MiddlewareFactory,
+    redirect,
+} from "@cms/middleware";
 
-export const rolesMiddleware = (
+const rolesMiddleware: MiddlewareFactory = (
     currentRoute: Route | null,
     middleware: CustomMiddleware
 ): CustomMiddleware => {
@@ -25,3 +29,5 @@ export const rolesMiddleware = (
         return middleware(request, event, response);
     };
 };
+
+export default rolesMiddleware;

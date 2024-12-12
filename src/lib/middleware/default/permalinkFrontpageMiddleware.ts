@@ -1,10 +1,14 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { Route, permalink } from "@cms/router";
-import { CustomMiddleware, redirect } from "@/lib/middleware";
-import { hasMiddleware } from "@/lib/middleware";
+import {
+    CustomMiddleware,
+    hasMiddleware,
+    MiddlewareFactory,
+    redirect,
+} from "@cms/middleware";
 import { fetchPageByPermalink } from "@/lib/data/pages";
 
-export const permalinkFrontpageMiddleware = (
+const permalinkFrontpageMiddleware: MiddlewareFactory = (
     currentRoute: Route | null,
     middleware: CustomMiddleware
 ): CustomMiddleware => {
@@ -13,15 +17,7 @@ export const permalinkFrontpageMiddleware = (
         event: NextFetchEvent,
         response: NextResponse
     ) => {
-        const matchPath =
-            /\/((?!api|_next\/static|_next\/image|favicon\.ico|favicon\.svg|icon\.ico|icon\.svg|sitemap\.xml|robots\.txt).*)/.test(
-                request.nextUrl.pathname
-            );
-
-        if (
-            matchPath &&
-            hasMiddleware(currentRoute, "front:permalink:frontpage")
-        ) {
+        if (hasMiddleware(currentRoute, "front:permalink:frontpage")) {
             if (currentRoute?.segments?.permalink) {
                 const page = await fetchPageByPermalink(
                     currentRoute?.segments?.permalink
@@ -39,3 +35,5 @@ export const permalinkFrontpageMiddleware = (
         return middleware(request, event, response);
     };
 };
+
+export default permalinkFrontpageMiddleware;
