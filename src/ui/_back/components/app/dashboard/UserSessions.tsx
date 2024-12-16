@@ -47,6 +47,7 @@ export default function UserSessions({ sessions: _sessions }: Readonly<Props>) {
                             <TableHeadingCell>Logged In</TableHeadingCell>
                             <TableHeadingCell>Browser</TableHeadingCell>
                             <TableHeadingCell>Device</TableHeadingCell>
+                            <TableHeadingCell>IP Address</TableHeadingCell>
                         </TableRow>
                     </TableHead>
                     <tbody
@@ -89,6 +90,9 @@ export default function UserSessions({ sessions: _sessions }: Readonly<Props>) {
                                 </TableCell>
                                 <TableCell aria-label="Device:">
                                     {session.device as string}
+                                </TableCell>
+                                <TableCell aria-label="IP Address:">
+                                    {session.ip_address as string}
                                 </TableCell>
                             </TableRow>
                         ))}
