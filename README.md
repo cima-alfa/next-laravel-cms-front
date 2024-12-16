@@ -322,3 +322,77 @@ In any server action you can call an async function to simulate a longer respons
 ---
 
 ### Middleware (`@cms/middleware`)
+
+...
+
+---
+
+### Server Actions
+
+...
+
+## User Docs:
+
+### First Usage
+
+After the installation, the administration is available under the `/control-panel` URL path. For example: \
+If the website address is `https://www.example.com`, then the `https://www.example.com/control-panel` URL should be visited to access the administration.
+
+You will need to login first, if you try to access the administration without an authenticated session, you will be redirected to the login page.
+
+The default username and password after the first installation are `admin` and `admin`. You should change the e-mail and password as soon as you login for the first time.
+
+---
+
+### Dashboard
+
+The Dashboard contains a table with all current active user sessions. The following information is displayed:
+
+-   User name
+-   Last activity
+-   Time of login
+-   Browser
+-   Device
+-   IP address
+
+---
+
+### Users
+
+All users registered are displayed in a paginated table / list (15 users per page). From here every profile can be accessed.
+
+Every user has the ability to modify their own profile. That includes information such as their full name, the name displayed with any resource they created, e-mail, phone number, login username and password.
+
+The owner of the website also has the ability to invite and delete users. The invite section is displayed next to the users table. Simply introduce a valid e-mail address and the user receives an invitation link to register. Only invited users can register and they must use the same e-mail address on which they received the invitation link.
+
+---
+
+### Pages
+
+All created pages are displayed in a paginated table / list (15 pages per page). Each page can be visited, edited and delete from here. In the top right corner of the table can be found a "create" button.
+
+#### Create Page
+
+To create a new page, simply introduce the title and text / content, optionally you can also mark the page as "not published" above the main form. The content supports the markdown syntax. In the future, a visual editor will be added for easier content management. On the right side, the meta data section can be found. This becomes editable once the page is created. The page link is automatically generated based on the title. If the title already exists, random characters are added to the page link.
+
+#### Edit Page
+
+Same as the "create page" form, except now you can edit the meta data of the page. The page link must always be unique, otherwise random characters will be added automatically at the end. It is recommended to introduce unique page title and description in the meta data section for better SEO performance.
+
+Search Engine crawling can be adjusted with the "Robots" field.
+
+Additionally you can include or ommit the page from the sitemap, set the frequency of changes and the priority of the page in the sitemap.
+
+#### Visit Page
+
+Each "published" page can be visited in the "public" are of the website using the link associated with the page.
+
+If the link is incorrect or the page is not published, a "not found" error page will be displayed instead.
+
+---
+
+### Settings
+
+The Settings area is accessible only to the owner of the website. Here you can set the default front page and website name.
+
+It is also necessary to configure the e-mail settings. The "Log" mailer option is meant for testing purposes. In order to send e-mails, including user invitations, it is necessary to configure a SMTP server. Your domain / e-mail provider should make that information available to you.
