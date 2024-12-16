@@ -2,12 +2,13 @@ import { route as routeFn, Router } from "ziggy-js";
 import { RouterConfigApi, RouterConfigFront } from "@cms/router";
 import { URLPattern } from "urlpattern-polyfill/urlpattern";
 import { Page } from "@/lib/data/pages";
+import { SimpleObject } from "@cms/helpers";
 
 export const FrontUrl = process.env.NEXT_PUBLIC_FRONT_URL as string;
 export const ApiUrl = process.env.API_URL as string;
 
 export const searchParamsToObject = (searchParams: URLSearchParams) => {
-    const params: { [key: string]: unknown } = {};
+    const params: SimpleObject = {};
 
     searchParams.forEach((value, key) => {
         params[key] = value;
@@ -16,7 +17,7 @@ export const searchParamsToObject = (searchParams: URLSearchParams) => {
     return params;
 };
 
-export type LinkParams = { [key: string]: unknown } | URLSearchParams;
+export type LinkParams = SimpleObject | URLSearchParams;
 
 export const linkApi = (
     name: keyof typeof RouterConfigApi.routes,
@@ -93,18 +94,17 @@ export const permalink = (
     //     }
 };
 
-export type RouteSegments = { [key: string]: string | undefined };
+export type RouteSegments = SimpleObject<string | undefined>;
 
 export type Route = {
     name: RouteName;
-    data: {
+    data: SimpleObject & {
         uri: string;
         pattern: string;
         methods: string[];
         parameters?: string[];
-        wheres?: { [key: string]: string };
+        wheres?: SimpleObject<string>;
         middleware?: string[];
-        [key: string]: unknown;
     };
     pattern: URLPattern;
     segments?: RouteSegments;

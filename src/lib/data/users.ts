@@ -3,8 +3,9 @@
 import { linkApi } from "@cms/router";
 import { apiData } from "@cms/fetch";
 import { simulateDelay } from "@cms/fetch";
+import { SimpleObject } from "@cms/helpers";
 
-export type User = {
+export type User = SimpleObject & {
     id: string;
     username: string;
     email: string;
@@ -26,7 +27,6 @@ export type User = {
             updated_at: string;
         };
     };
-    [key: string]: unknown;
 };
 
 export type Users = {
@@ -52,13 +52,12 @@ export type Users = {
     };
 } | null;
 
-export type Session = {
+export type Session = SimpleObject & {
     ip_address: string | null;
     user_agent: string | null;
     created_at: string;
     last_activity: number | string;
     user: User;
-    [key: string]: unknown;
 };
 
 export type Sessions = {
@@ -94,7 +93,7 @@ export const fetchUserSessions = async (user?: string): Promise<Sessions> => {
 export const fetchUsers = async (page = "1"): Promise<Users> => {
     await simulateDelay(1);
 
-    const params: { [key: string]: unknown } = {
+    const params: SimpleObject = {
         "page[number]": page,
     };
 

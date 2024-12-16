@@ -3,10 +3,9 @@
 import { linkApi } from "@cms/router";
 import { apiData } from "@cms/fetch";
 import { simulateDelay } from "@cms/fetch";
+import { SimpleObject } from "@cms/helpers";
 
-export type Settings = {
-    [key: string]: string | null;
-};
+export type Settings = SimpleObject<string | null>;
 
 export const fetchSettings = async (): Promise<Settings> => {
     await simulateDelay(1);
@@ -15,13 +14,11 @@ export const fetchSettings = async (): Promise<Settings> => {
         async (response) => {
             const settings: Settings = {};
 
-            ((await response.json())?.data as [])?.map(
-                (setting: { [key: string]: string | null }) => {
-                    const data = Object.entries(setting);
+            ((await response.json())?.data as [])?.map((setting: Settings) => {
+                const data = Object.entries(setting);
 
-                    settings[data[0][0]] = data[0][1];
-                }
-            );
+                settings[data[0][0]] = data[0][1];
+            });
 
             return settings;
         }

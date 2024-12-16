@@ -1,5 +1,6 @@
 "use server";
 
+import { SimpleObject } from "@cms/helpers";
 import {
     RequestCookie,
     ResponseCookie,
@@ -60,7 +61,7 @@ export const setCookie = async (cookie: string, response?: NextResponse) => {
 
     const cookieNameValue = cookieData.next();
 
-    const setCookie: { [key: string]: string } = {
+    const setCookie: SimpleObject<string> = {
         name: cookieNameValue.value?.at(1) as string,
         value: cookieNameValue.value?.at(2) as string,
     };

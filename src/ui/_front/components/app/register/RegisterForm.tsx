@@ -7,6 +7,7 @@ import InputText from "@/front-ui/components/forms/InputText";
 import ButtonBase from "@/front-ui/components/ButtonBase";
 import { ChangeEvent } from "@/front-ui/components/forms";
 import { useSearchParams } from "next/navigation";
+import { SimpleObject } from "@cms/helpers";
 
 export default function RegisterForm({
     className,
@@ -21,9 +22,8 @@ export default function RegisterForm({
         password_confirmation: "",
     };
 
-    const [formState, setFormState] = useState<{
-        [key: string]: string;
-    }>(initialState);
+    const [formState, setFormState] =
+        useState<SimpleObject<string>>(initialState);
 
     const handleInput = (event: ChangeEvent) => {
         const data = { ...formState };

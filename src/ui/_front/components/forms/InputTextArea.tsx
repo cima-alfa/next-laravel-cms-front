@@ -3,16 +3,14 @@
 import InputError from "@/front-ui/components/forms/base/InputError";
 import InputLabel from "@/front-ui/components/forms/base/InputLabel";
 import InputTextAreaField from "@/front-ui/components/forms/base/InputTextAreaField";
+import { FormState } from "@cms/helpers";
 import { useId } from "react";
 import slugify from "slugify";
 
 interface Props extends React.InputHTMLAttributes<HTMLTextAreaElement> {
     label: string;
     name?: string;
-    state?: {
-        [key: string]: unknown;
-        errors?: { [key: string]: string[] };
-    } | null;
+    state?: FormState;
 }
 
 export default function InputTextArea({

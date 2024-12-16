@@ -3,16 +3,14 @@
 import InputError from "@/back-ui/components/forms/base/InputError";
 import InputLabel from "@/back-ui/components/forms/base/InputLabel";
 import InputSelectField from "@/back-ui/components/forms/base/InputSelectField";
+import { FormState } from "@cms/helpers";
 import { useId } from "react";
 import slugify from "slugify";
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
     name?: string;
-    state?: {
-        [key: string]: unknown;
-        errors?: { [key: string]: string[] };
-    } | null;
+    state?: FormState;
 }
 
 export default function InputSelect({

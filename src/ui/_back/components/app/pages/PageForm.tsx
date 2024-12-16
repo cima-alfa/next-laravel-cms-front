@@ -22,6 +22,7 @@ import {
     ViewAction,
 } from "@/back-ui/components/tables/TableActions";
 import { link, permalink } from "@cms/router";
+import { SimpleObject } from "@cms/helpers";
 
 interface Props {
     mode: "create" | "edit";
@@ -65,9 +66,8 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
         };
     }, [page]);
 
-    const [formStateContent, setFormStateContent] = useState<{
-        [key: string]: unknown;
-    }>(initialStateContent);
+    const [formStateContent, setFormStateContent] =
+        useState<SimpleObject>(initialStateContent);
 
     const initialStateMetadata = useMemo(() => {
         return {
@@ -81,18 +81,13 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
         };
     }, [page]);
 
-    const [formStateMetadata, setFormStateMetadata] = useState<{
-        [key: string]: unknown;
-    }>(initialStateMetadata);
+    const [formStateMetadata, setFormStateMetadata] =
+        useState<SimpleObject>(initialStateMetadata);
 
     const handleInput = async (
         event: ChangeEvent,
-        state: { [key: string]: unknown },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: unknown;
-            }>
-        >,
+        state: SimpleObject,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject>>,
         form: "content" | "metadata"
     ) => {
         const data = { ...state };
@@ -148,12 +143,8 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
 
     const handleBlur = async (
         event: FocusEvent,
-        state: { [key: string]: unknown },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: unknown;
-            }>
-        >,
+        state: SimpleObject,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject>>,
         form: "content" | "metadata"
     ) => {
         switch (form) {
@@ -190,12 +181,8 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
     };
 
     const handleReset = (
-        state: { [key: string]: unknown },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: unknown;
-            }>
-        >
+        state: SimpleObject,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject>>
     ) => {
         setState(state);
 

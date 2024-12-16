@@ -9,6 +9,7 @@ import InputSelect from "@/back-ui/components/forms/InputSelect";
 import { Settings } from "@/lib/data/settings";
 import InputText from "@/back-ui/components/forms/InputText";
 import { updateSettings } from "@/lib/actions/settings";
+import { SimpleObject } from "@cms/helpers";
 
 interface Props extends React.FormHTMLAttributes<HTMLFormElement> {
     settings: Settings;
@@ -38,18 +39,13 @@ export default function EmailsSettingsForm({
             settings["mail.mailers.default.from.name"] ?? "",
     };
 
-    const [formState, setFormState] = useState<{
-        [key: string]: string;
-    }>(initialState);
+    const [formState, setFormState] =
+        useState<SimpleObject<string>>(initialState);
 
     const handleInput = (
         event: ChangeEvent,
-        state: { [key: string]: string },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: string;
-            }>
-        >
+        state: SimpleObject<string>,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject<string>>>
     ) => {
         const data = { ...state };
 

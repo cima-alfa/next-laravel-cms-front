@@ -7,6 +7,7 @@ import { invite } from "@/lib/actions/auth";
 import Form from "next/form";
 import { useActionState, useState } from "react";
 import ButtonBase from "@/back-ui/components/ButtonBase";
+import { SimpleObject } from "@cms/helpers";
 
 export default function UserInvite({
     className,
@@ -16,18 +17,13 @@ export default function UserInvite({
         email: "",
     };
 
-    const [formState, setFormState] = useState<{
-        [key: string]: string;
-    }>(initialState);
+    const [formState, setFormState] =
+        useState<SimpleObject<string>>(initialState);
 
     const handleInput = (
         event: ChangeEvent,
-        state: { [key: string]: string },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: string;
-            }>
-        >
+        state: SimpleObject<string>,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject<string>>>
     ) => {
         const data = { ...state };
 

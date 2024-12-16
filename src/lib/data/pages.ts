@@ -4,8 +4,9 @@ import { User } from "@/lib/data/users";
 import { linkApi } from "@cms/router";
 import { apiData } from "@cms/fetch";
 import { simulateDelay } from "@cms/fetch";
+import { SimpleObject } from "@cms/helpers";
 
-export type Page = {
+export type Page = SimpleObject & {
     id: string;
     title: string;
     text: string;
@@ -25,7 +26,6 @@ export type Page = {
         sitemap_prio: string;
         sitemap_change_freq: string;
     };
-    [key: string]: unknown;
 };
 
 export type PagesMeta = {
@@ -59,7 +59,7 @@ export const fetchPages = async (
 ): Promise<Pages> => {
     await simulateDelay(1);
 
-    const params: { [key: string]: unknown } = {};
+    const params: SimpleObject = {};
 
     if (page === "all") {
         params.all = null;

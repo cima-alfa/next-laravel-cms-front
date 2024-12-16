@@ -1,17 +1,12 @@
 "use server";
 
 import { link, linkApi } from "@cms/router";
-import { formDataToJson } from "@cms/helpers";
+import { formDataToJson, FormState } from "@cms/helpers";
 import { apiAction } from "@cms/fetch";
 import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 
-export type PagesState = {
-    message: string;
-    errors?: { [key: string]: string[] };
-} | null;
-
-export const createPage = async (prevState: PagesState, formData: FormData) => {
+export const createPage = async (prevState: FormState, formData: FormData) => {
     const options: RequestInit = {
         method: "POST",
         body: formDataToJson(formData, "title", "text", "published"),
@@ -35,7 +30,7 @@ export const createPage = async (prevState: PagesState, formData: FormData) => {
 
 export const updatePage = async (
     page: string,
-    prevState: PagesState,
+    prevState: FormState,
     formData: FormData
 ) => {
     const options: RequestInit = {
@@ -63,7 +58,7 @@ export const updatePage = async (
 
 export const updatePageMetadata = async (
     page: string,
-    prevState: PagesState,
+    prevState: FormState,
     formData: FormData
 ) => {
     const options: RequestInit = {

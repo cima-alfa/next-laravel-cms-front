@@ -8,7 +8,11 @@ import { ChangeEvent, FocusEvent } from "@/back-ui/components/forms";
 import PanelBase from "@/back-ui/components/layout/PanelBase";
 import { updateUser, updateUserPassword } from "@/lib/actions/users";
 import { User } from "@/lib/data/users";
-import { formatPhoneCountryCode, formatPhoneNumber } from "@cms/helpers";
+import {
+    formatPhoneCountryCode,
+    formatPhoneNumber,
+    SimpleObject,
+} from "@cms/helpers";
 import { getDisplayNameOptions } from "@cms/helpers";
 import Form from "next/form";
 import { useActionState, useId, useState } from "react";
@@ -67,34 +71,27 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
         phone: user.phone ?? "",
     };
 
-    const [formProfileState, setFormProfileState] = useState<{
-        [key: string]: string;
-    }>(initialProfileState);
+    const [formProfileState, setFormProfileState] =
+        useState<SimpleObject<string>>(initialProfileState);
 
     const initialUsernameState = {
         username: user.username,
     };
 
-    const [formUsernameState, setFormUsernameState] = useState<{
-        [key: string]: string;
-    }>(initialUsernameState);
+    const [formUsernameState, setFormUsernameState] =
+        useState<SimpleObject<string>>(initialUsernameState);
 
     const initialEmailState = {
         email: user.email,
     };
 
-    const [formEmailState, setFormEmailState] = useState<{
-        [key: string]: string;
-    }>(initialEmailState);
+    const [formEmailState, setFormEmailState] =
+        useState<SimpleObject<string>>(initialEmailState);
 
     const handleInput = (
         event: ChangeEvent,
-        state: { [key: string]: string },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: string;
-            }>
-        >
+        state: SimpleObject<string>,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject<string>>>
     ) => {
         const data = { ...state };
 
@@ -129,12 +126,8 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
 
     const handleBlur = (
         event: FocusEvent,
-        state: { [key: string]: string },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: string;
-            }>
-        >
+        state: SimpleObject<string>,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject<string>>>
     ) => {
         const data = { ...state };
 
@@ -152,12 +145,8 @@ export default function UserProfile({ user, currentUser }: Readonly<Props>) {
     };
 
     const handleReset = (
-        state: { [key: string]: string },
-        setState: React.Dispatch<
-            React.SetStateAction<{
-                [key: string]: string;
-            }>
-        >
+        state: SimpleObject<string>,
+        setState: React.Dispatch<React.SetStateAction<SimpleObject<string>>>
     ) => {
         setState(state);
     };

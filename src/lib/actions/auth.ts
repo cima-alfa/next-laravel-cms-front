@@ -11,12 +11,7 @@ import {
 import { setCookies } from "@cms/cookies";
 import { apiAction } from "@cms/fetch";
 import { redirect, RedirectType } from "next/navigation";
-import { formDataToJson } from "@cms/helpers";
-
-export type AuthState = {
-    message: string;
-    errors?: { [key: string]: string[] };
-} | null;
+import { formDataToJson, FormState } from "@cms/helpers";
 
 export const logout = async (pathname?: string) => {
     await apiAction(linkApi("logout"), { method: "POST" }).then(
@@ -38,7 +33,7 @@ export const logout = async (pathname?: string) => {
     );
 };
 
-export const login = async (prevState: AuthState, formData: FormData) => {
+export const login = async (prevState: FormState, formData: FormData) => {
     const options: RequestInit = {
         method: "POST",
         body: formDataToJson(formData, "login", "password"),
@@ -63,7 +58,7 @@ export const login = async (prevState: AuthState, formData: FormData) => {
 export const register = async (
     expires: string | null,
     signature: string | null,
-    prevState: AuthState,
+    prevState: FormState,
     formData: FormData
 ) => {
     const options: RequestInit = {
@@ -102,7 +97,7 @@ export const register = async (
     });
 };
 
-export const invite = async (prevState: AuthState, formData: FormData) => {
+export const invite = async (prevState: FormState, formData: FormData) => {
     const options: RequestInit = {
         method: "POST",
         body: formDataToJson(formData, "email"),

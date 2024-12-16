@@ -1,18 +1,9 @@
 "use server";
 
 import { link, linkApi } from "@cms/router";
-import { formDataToObject } from "@cms/helpers";
+import { formDataToObject, FormState, SimpleObject } from "@cms/helpers";
 import { apiAction } from "@cms/fetch";
 import { revalidatePath } from "next/cache";
-
-export type SettingsState = {
-    message: string;
-    errors?: { [key: string]: string[] };
-} | null;
-
-export type Settings = {
-    [key: string]: string | null;
-};
 
 const generalSettings = (formData: FormData) => {
     return {
@@ -42,10 +33,10 @@ const emailsSettings = (formData: FormData) => {
 
 export const updateSettings = async (
     type: "general" | "emails",
-    prevState: SettingsState,
+    prevState: FormState,
     formData: FormData
 ) => {
-    let settings: { settings: { [key: string]: unknown } };
+    let settings: { settings: SimpleObject };
 
     switch (type) {
         case "general":
@@ -69,7 +60,7 @@ export const updateSettings = async (
             const data = await response.json();
 
             if (!response.ok) {
-                const errors: { [key: string]: string[] } = {};
+                const errors: SimpleObject<string[]> = {};
 
                 Object.entries(data.errors ?? {}).map((error) => {
                     errors[error[0].replace(/^settings\./, "")] =

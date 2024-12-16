@@ -3,6 +3,7 @@
 import InputError from "@/front-ui/components/forms/base/InputError";
 import InputLabel from "@/front-ui/components/forms/base/InputLabel";
 import InputTextField from "@/front-ui/components/forms/base/InputTextField";
+import { FormState } from "@cms/helpers";
 import { useId } from "react";
 import slugify from "slugify";
 
@@ -10,10 +11,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     type?: string;
     name?: string;
-    state?: {
-        [key: string]: unknown;
-        errors?: { [key: string]: string[] };
-    } | null;
+    state?: FormState;
     datalist?: string[];
 }
 

@@ -1,4 +1,4 @@
-export type Object = { [key: string]: unknown };
+export type SimpleObject<T = unknown> = { [key: string]: T };
 
 /**
  * Add an element into a multidimensional object using the dot notation.
@@ -8,10 +8,10 @@ export type Object = { [key: string]: unknown };
  * `{ ..., foo: { bar: 'new value' } }`
  */
 export const setObject = (
-    object: Object,
+    object: SimpleObject,
     path: string,
     value: unknown
-): Object => {
+): SimpleObject => {
     const [current, ...rest] = path.split(".");
 
     object[current] =
@@ -30,7 +30,7 @@ export const setObject = (
  *
  * If path is incorrect, `undefined` is returned.
  */
-export const findInObject = (object: Object, path: string) => {
+export const findInObject = (object: SimpleObject, path: string) => {
     const keys = path.split(".");
 
     let value: unknown = object;
@@ -43,7 +43,7 @@ export const findInObject = (object: Object, path: string) => {
 };
 
 export const formDataToObject = (formData: FormData, ...fields: string[]) => {
-    let data: Object = {};
+    let data: SimpleObject = {};
 
     fields.forEach((field) => {
         const values = formData.getAll(field);

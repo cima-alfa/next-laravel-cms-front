@@ -1,7 +1,7 @@
 "use server";
 
 import { link, linkApi } from "@cms/router";
-import { formDataToJson } from "@cms/helpers";
+import { formDataToJson, FormState } from "@cms/helpers";
 import { apiAction } from "@cms/fetch";
 import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
@@ -28,13 +28,7 @@ import { redirect, RedirectType } from "next/navigation";
 //     );
 // };
 
-export type UserState =
-    | {
-          message?: string;
-          errors?: { [key: string]: string[] };
-      }
-    | null
-    | undefined;
+export type UserState = FormState | undefined;
 
 export const updateUser = async (
     prevState: UserState,

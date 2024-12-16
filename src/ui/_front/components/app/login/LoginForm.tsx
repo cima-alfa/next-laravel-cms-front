@@ -6,6 +6,7 @@ import { login } from "@/lib/actions/auth";
 import InputText from "@/front-ui/components/forms/InputText";
 import ButtonBase from "@/front-ui/components/ButtonBase";
 import { ChangeEvent } from "@/front-ui/components/forms";
+import { SimpleObject } from "@cms/helpers";
 
 export default function LoginForm({
     className,
@@ -16,9 +17,8 @@ export default function LoginForm({
         password: "",
     };
 
-    const [formState, setFormState] = useState<{
-        [key: string]: string;
-    }>(initialState);
+    const [formState, setFormState] =
+        useState<SimpleObject<string>>(initialState);
 
     const handleInput = (event: ChangeEvent) => {
         const data = { ...formState };
