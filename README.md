@@ -54,13 +54,13 @@ Favicons must be included in the `src/app` directory. For more information, chec
 
 ### Helpers and Hooks
 
-#### Object helpers (`@cms/helpers`)
+#### Object Helpers (`@cms/helpers`)
 
 The following multidimensional object helpers are available:
 
--   ##### `type Object = { [key: string]: unknown }`
+-   ##### `type SimpleObject<T = unknown> = { [key: string]: T }`
 
--   ##### `setObject(object: Object, path: string, value: unknown): Object`
+-   ##### `setObject(object: SimpleObject, path: string, value: unknown): SimpleObject`
 
     Allows to set a mutidimensional element in the provided object usin the dot notation.
 
@@ -68,7 +68,7 @@ The following multidimensional object helpers are available:
 
     `{ foo: { bar: "Hello there!" } }`
 
--   ##### `findInObject(object: Object, path: string): unknown`
+-   ##### `findInObject(object: SimpleObject, path: string): unknown`
 
     Allows to find a mutidimensional element in the provided object usin the dot notation.
 
@@ -76,7 +76,7 @@ The following multidimensional object helpers are available:
 
     If the path is incorrect, `undefined` is returned.
 
--   ##### `formDataToObject(formData: FormData, ...fields: string[]): Object`
+-   ##### `formDataToObject(formData: FormData, ...fields: string[]): SimpleObject`
 
     Converts `FormData` fields to a simple object. For multidimensional fiels, use the dot notation instead of the stardard array notation.
 
@@ -107,6 +107,14 @@ The following multidimensional object helpers are available:
 -   ##### `formDataToJson(formData: FormData, ...fields: string[]): string`
 
     Same as the `formDataToObject`, except it returns a `JSON` string of the object.
+
+#### Forms
+
+-   ##### `type FormMessage = { message?: string; }`
+
+-   ##### `type FormErrors = { errors?: SimpleObject<string[]>; }`
+
+-   ##### `type FormState = (SimpleObject & FormMessage & FormErrors) | null | undefined`
 
 #### Sleep (`@cms/helpers`)
 
@@ -171,7 +179,7 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
 
 #### Links
 
--   ##### `type LinkParams = { [key: string]: unknown } | URLSearchParams`
+-   ##### `type LinkParams = SimpleObject | URLSearchParams`
 
 -   ##### `link(name: RouteName, params?: LinkParams, absolute = false): string`
 
@@ -191,7 +199,7 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
 
     Same as `link` except it generates API URLs, always absolute.
 
--   ##### `searchParamsToObject(searchParams: URLSearchParams): { [key: string]: unknown }`
+-   ##### `searchParamsToObject(searchParams: URLSearchParams): SimpleObject`
 
     Helper to convert `URLSearchParams` to a simple object.
 
@@ -202,16 +210,13 @@ App URLs defined in the `.env.local` config are exported as `ApiUrl` and `FrontU
     ```
     {
         name: RouteName;
-        data: {
+        data: SimpleObject & {
             uri: string;
             pattern: string;
             methods: string[];
             parameters?: string[];
-            wheres?: {
-                [key: string]: string;
-            };
+            wheres?: SimpleObject<string>;
             middleware?: string[];
-            [key: string]: unknown;
         };
         pattern: URLPattern;
         segments?: RouteSegments;
