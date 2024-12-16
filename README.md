@@ -62,7 +62,7 @@ The following multidimensional object helpers are available:
 
 -   ##### `setObject(object: SimpleObject, path: string, value: unknown): SimpleObject`
 
-    Allows to set a mutidimensional element in the provided object usin the dot notation.
+    Allows to set a mutidimensional element in the provided object using the dot notation.
 
     If we provide an empty object and set a value of `Hello there!` to the `foo.bar` path, then the updated object is returned:
 
@@ -70,7 +70,7 @@ The following multidimensional object helpers are available:
 
 -   ##### `findInObject(object: SimpleObject, path: string): unknown`
 
-    Allows to find a mutidimensional element in the provided object usin the dot notation.
+    Allows to find a mutidimensional element in the provided object using the dot notation.
 
     If we have the following object: `{ foo: { bar: "Hello there!" } }` and provide the following path: `foo.bar`, then the `Hello there!` value is returned.
 
