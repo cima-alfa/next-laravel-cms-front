@@ -23,6 +23,7 @@ import {
 } from "@/back-ui/components/tables/TableActions";
 import { link, permalink } from "@cms/router";
 import { SimpleObject } from "@cms/helpers";
+import RichEditor from "@/ui/components/RichEditor";
 
 interface Props {
     mode: "create" | "edit";
@@ -366,7 +367,7 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
                             }
                         />
 
-                        <InputTextArea
+                        {/* <InputTextArea
                             label="Text"
                             name="text"
                             value={formStateContent.text as string}
@@ -379,6 +380,11 @@ export default function PageForm({ mode, page }: Readonly<Props>) {
                                     "content"
                                 )
                             }
+                        /> */}
+
+                        <RichEditor
+                            initialValue={formStateContent.text as string}
+                            name="text"
                         />
 
                         <div className="flex justify-between gap-4">

@@ -1,7 +1,6 @@
 import { fetchPageByPermalink } from "@/lib/data/pages";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Markdown from "react-markdown";
 
 interface Props {
     params: Promise<{ permalink?: string[] }>;
@@ -31,10 +30,14 @@ export default async function Page({ params }: Readonly<Props>) {
     }
 
     return (
-        <div className="prose prose-light dark:prose-dark">
-            <h1>{page.title}</h1>
-
-            <Markdown>{page.text}</Markdown>
-        </div>
+        <div
+            className="prose prose-light dark:prose-dark"
+            dangerouslySetInnerHTML={{
+                __html: `
+                    <h1>${page.title}</h1>
+                    ${page.text}
+                `,
+            }}
+        />
     );
 }
