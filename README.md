@@ -1,10 +1,5 @@
 # Next.js Interface for the [Laravel Next Headless CMS](https://github.com/cima-alfa/next-laravel-cms-api)
 
-Demo available at: https://next-cms.sjeremy.dev
-
-Login: admin \
-Password: admin
-
 -   [Developer Docs](#developer-docs)
 -   [User Docs](#user-docs)
 
